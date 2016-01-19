@@ -9,15 +9,10 @@ using namespace cv;
 
 using namespace std;
 
-void speak()
+void process(Mat* img)
 {
-    Mat img = imread("/home/rebels/code/2016/opencv_lib/lena.jpg", CV_LOAD_IMAGE_COLOR);
-    if(img.empty())
-    {
-      cout<<"Image was empty"<<endl;
-      return;
-    }
+
     namedWindow( "lena", CV_WINDOW_AUTOSIZE );
-    imshow("lena", img);
+    imshow("lena", *img);
     waitKey(0);
 }

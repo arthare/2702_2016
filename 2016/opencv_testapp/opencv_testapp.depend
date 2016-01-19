@@ -1,7 +1,11 @@
 # depslib dependency file v1.0
-1453240759 source:/home/rebels/code/2016/opencv_testapp/main.cpp
+1453244005 source:/home/rebels/code/2016/opencv_testapp/main.cpp
 	<iostream>
 	"2702_proc.h"
+	<opencv2/core/core.hpp>
+	<opencv2/imgproc/imgproc.hpp>
+	<opencv2/highgui/highgui.hpp>
 
-1453240826 /home/rebels/code/2016/opencv_lib/2702_proc.h
+1453243864 /home/rebels/code/2016/opencv_lib/2702_proc.h
+	<opencv2/core/core.hpp>
 
