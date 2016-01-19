@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1453240759 source:/home/rebels/code/2016/opencv_testapp/main.cpp
+	<iostream>
+	"2702_proc.h"
+
+1453240826 /home/rebels/code/2016/opencv_lib/2702_proc.h
+
