@@ -14,5 +14,5 @@ void process(Mat* img)
 
     namedWindow( "lena", CV_WINDOW_AUTOSIZE );
     imshow("lena", *img);
-    waitKey(0);
+    //waitKey(0);
 }

@@ -15,6 +15,7 @@ int main(int argc, char** argv)
         cap >> frame;
         if( frame.empty() ) break; // end of video stream
         process (&frame);
+        waitKey(30);
 
     }
     // the camera will be closed automatically upon exit
