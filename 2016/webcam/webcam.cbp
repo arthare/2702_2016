@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="webcam" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/webcam" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="../../../../../usr/local/lib/libopencv_core.so" />
+					<Add library="../../../../../usr/local/lib/libopencv_highgui.so" />
+					<Add library="../../../../../usr/local/lib/libopencv_imgproc.so" />
+					<Add library="../../../../../usr/local/lib/libopencv_ts.a" />
+					<Add library="../../../../../usr/local/lib/libopencv_video.so" />
+					<Add library="../../../../../usr/local/lib/libopencv_videoio.so" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/webcam" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

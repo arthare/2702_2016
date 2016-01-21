@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1453247821 source:/home/rebels/code/2016/webcam/main.cpp
+	"opencv2/opencv.hpp"
+	"2702_proc.h"
+
+1453243864 /home/rebels/code/2016/opencv_lib/2702_proc.h
+	<opencv2/core/core.hpp>
+
+1453243864 /home/rebels/code/2016/webcam/2702_proc.h
+	<opencv2/core/core.hpp>
+
