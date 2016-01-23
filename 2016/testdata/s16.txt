@@ -1,0 +1,5 @@
+../testdata/images/s16.png
+256
+53
+341
+121

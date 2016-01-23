@@ -1,0 +1,5 @@
+../testdata/images/s11.png
+259
+55
+340
+136

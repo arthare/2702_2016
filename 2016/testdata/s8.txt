@@ -1,0 +1,5 @@
+../testdata/images/s8.png
+256
+49
+342
+136

@@ -1,0 +1,5 @@
+../testdata/images/s14.png
+256
+53
+340
+135
