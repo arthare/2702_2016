@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -56,9 +57,10 @@ int main()
 
     for(int x = 0; x < testFiles.size(); x++)
     {
-        if(fileExists(testFiles[x]) && testFiles[x].find("/.") == std::string::npos)
+        if(fileExists(testFiles[x]) && testFiles[x].find(".txt") != std::string::npos)
         {
             cout<<"about to load "<<testFiles[x]<<endl;
+
             Mat img = imread(testFiles[x].c_str(), CV_LOAD_IMAGE_COLOR);
             if(img.empty())
             {
