@@ -17,7 +17,7 @@ int main(int argc, char** argv)
         Mat frame;
         cap >> frame;
         if( frame.empty() ) break; // end of video stream
-        process (&frame, 0);
+        imshow("window", frame);
         waitKey(30);
 
     }
