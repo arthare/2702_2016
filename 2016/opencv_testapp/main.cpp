@@ -36,11 +36,26 @@ bool fileExists (const std::string& name)
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
+void filterOutCrap(vector<string>& crapFiles)
+{
+    for(int x = 0; x < crapFiles.size(); x++ )
+    {
+        string file = crapFiles[x];
+        if(file.find(".txt") == string::npos)
+        {
+            crapFiles[x] = crapFiles.back();
+            crapFiles.pop_back();
+            x--;
+        }
+    }
+}
 int main()
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
 
+
+    filterOutCrap(testFiles);
 
     /// Create Windows
     namedWindow("window");
@@ -55,25 +70,34 @@ int main()
       createTrackbar( TrackbarName, "window", &args[x], 255 );
     }
 
-    for(int x = 0; x < testFiles.size(); x++)
-    {
-        if(fileExists(testFiles[x]) && testFiles[x].find(".txt") != std::string::npos)
-        {
-            cout<<"about to load "<<testFiles[x]<<endl;
 
-            Mat img = imread(testFiles[x].c_str(), CV_LOAD_IMAGE_COLOR);
+    int ixLastImage = -1;
+    Mat img;
+    while(true)
+    {
+        int ixCurrentImage = args[5];
+        ixCurrentImage = min((int)ixCurrentImage, (int)testFiles.size());
+        if(ixCurrentImage != ixLastImage)
+        {
+            cout<<" they want us to load "<<ixCurrentImage<<", which is "<<testFiles[ixCurrentImage]<<endl;
+            string strTxt = testFiles[ixCurrentImage];
+            string imgFile;
+            ifstream in;
+            in.open(strTxt.c_str());
+            in>>imgFile;
+            cout<<"which leads us to imgfile = "<<imgFile<<endl;
+            img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
             if(img.empty())
             {
-              cout<<"Image "<<testFiles[x]<<" was empty"<<endl;
-              return 0;
+              cout<<"Image "<<imgFile<<" was empty"<<endl;
             }
 
-
-            process(&img, args);
-
-            waitKey(0);
+            ixLastImage = ixCurrentImage;
         }
-    } // end loop through images in dir
 
+        cout<<"processing with image: "<<ixCurrentImage<<endl;
+        process(&img, args);
 
+        waitKey(30);
+    }
 }
