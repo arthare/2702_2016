@@ -1,0 +1,5 @@
+../testdata/images/s19.png
+317
+47
+397
+135
