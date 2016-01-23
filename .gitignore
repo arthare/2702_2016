@@ -1,4 +1,4 @@
 obj
 bin
-*.layout
-*.depend
+layout
+depend
