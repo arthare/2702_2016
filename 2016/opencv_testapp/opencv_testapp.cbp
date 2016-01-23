@@ -16,6 +16,11 @@
 				</Compiler>
 				<Linker>
 					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
+					<Add library="../../../opencv-3.1.0/build/lib/libopencv_core.so" />
+					<Add library="../../../opencv-3.1.0/build/lib/libopencv_highgui.so" />
+					<Add library="../../../opencv-3.1.0/build/lib/libopencv_imgcodecs.so" />
+					<Add library="../../../opencv-3.1.0/build/lib/libopencv_imgproc.so" />
+					<Add library="../../../opencv-3.1.0/build/lib/libopencv_videoio.so" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -34,11 +39,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="../opencv_lib/" />
 		</Compiler>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

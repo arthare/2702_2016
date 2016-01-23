@@ -9,3 +9,11 @@
 1453243864 /home/rebels/code/2016/webcam/2702_proc.h
 	<opencv2/core/core.hpp>
 
+1453570859 source:/home/pi/2702_2016/2016/webcam/main.cpp
+	"opencv2/opencv.hpp"
+	"../opencv_lib/2702_proc.h"
+	<stdio.h>
+
+1453561414 /home/pi/2702_2016/2016/opencv_lib/2702_proc.h
+	<opencv2/core/core.hpp>
+

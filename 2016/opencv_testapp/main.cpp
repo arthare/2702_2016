@@ -10,7 +10,7 @@ using namespace cv;
 
 int main()
 {
-    Mat img = imread("/home/rebels/code/2016/opencv_lib/lena.jpg", CV_LOAD_IMAGE_COLOR);
+    Mat img = imread("../opencv_lib/lena.jpg", CV_LOAD_IMAGE_COLOR);
     if(img.empty())
     {
       cout<<"Image was empty"<<endl;
