@@ -1,0 +1,5 @@
+../testdata/images/s24.png
+313
+54
+401
+132
