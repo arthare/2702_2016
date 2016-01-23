@@ -36,8 +36,7 @@ int main(int argc, char** argv)
         Mat frame2;
         cap >> frame;
         if( frame.empty() ) break; // end of video stream
-        process (&frame, 0);
-        waitKey(30);
+        //process (&frame, 0);
         int now = getms();
         printf("took %dms\n", (now-lastMs));
         lastMs = now;
