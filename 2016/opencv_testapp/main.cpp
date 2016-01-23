@@ -38,7 +38,7 @@ bool fileExists (const std::string& name)
 }
 void filterOutCrap(vector<string>& crapFiles)
 {
-    for(int x = 0; x < crapFiles.size(); x++ )
+    for(unsigned int x = 0; x < crapFiles.size(); x++ )
     {
         string file = crapFiles[x];
         if(file.find(".txt") == string::npos)
@@ -54,50 +54,51 @@ int main()
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
 
-
     filterOutCrap(testFiles);
 
-    /// Create Windows
-    namedWindow("window");
-
-    const int NUM_ARGS = 6;
-    int args[NUM_ARGS] = {0};
-
-    for(int x = 0; x < NUM_ARGS; x++)
+    int passes = 0;
+    for(unsigned int x=0; x < testFiles.size(); x++)
     {
-      char TrackbarName[50];
-      sprintf( TrackbarName, "Arg %d", x );
-      createTrackbar( TrackbarName, "window", &args[x], 255 );
-    }
+        const string& strTxt = testFiles[x];
+        string imgFile;
 
+        ifstream in;
+        in.open(strTxt.c_str());
 
-    int ixLastImage = -1;
-    Mat img;
-    while(true)
-    {
-        int ixCurrentImage = args[5];
-        ixCurrentImage = min((int)ixCurrentImage, (int)testFiles.size());
-        if(ixCurrentImage != ixLastImage)
+        in>>imgFile;
+
+        cout<<"processing with image: "<<x<<"...";
+
+        Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+        if(img.empty())
         {
-            cout<<" they want us to load "<<ixCurrentImage<<", which is "<<testFiles[ixCurrentImage]<<endl;
-            string strTxt = testFiles[ixCurrentImage];
-            string imgFile;
-            ifstream in;
-            in.open(strTxt.c_str());
-            in>>imgFile;
-            cout<<"which leads us to imgfile = "<<imgFile<<endl;
-            img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
-            if(img.empty())
+          cout<<"NOT FOUND"<<endl;
+        }
+        else
+
+        {
+            int left;
+            int right;
+            int top;
+            int bottom;
+            in>> left;
+            in>> top;
+            in>> right;
+            in>> bottom;
+
+            pos pt = process(&img, 0);
+            if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
             {
-              cout<<"Image "<<imgFile<<" was empty"<<endl;
+                cout<<"PASSED"<<endl;
+                passes ++;
+            }
+            else
+            {
+                cout<<"FAILED"<<endl;
             }
 
-            ixLastImage = ixCurrentImage;
         }
 
-        cout<<"processing with image: "<<ixCurrentImage<<endl;
-        process(&img, args);
-
-        waitKey(30);
     }
+    cout << passes << " of " << testFiles.size() << endl;
 }

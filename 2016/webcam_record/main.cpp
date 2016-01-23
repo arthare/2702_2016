@@ -11,6 +11,7 @@ int main(int argc, char** argv)
         return -1;
 
     cap.set(CAP_PROP_CONTRAST, -0.75);
+    cap.set(CAP_PROP_BRIGHTNESS, -0.75);
     namedWindow("window");
     for(;;)
     {
