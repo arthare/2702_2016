@@ -1,0 +1,5 @@
+../testdata/images/s7.png
+126
+291
+225
+390

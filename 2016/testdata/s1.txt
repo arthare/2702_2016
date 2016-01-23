@@ -1,0 +1,5 @@
+../testdata/images/s1.png
+227
+233
+330
+330
