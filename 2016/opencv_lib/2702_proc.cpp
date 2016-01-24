@@ -11,18 +11,33 @@ using namespace std;
 
 pos HSV_convert(Mat* img, int* args)
 {
+    int erodeValue = 3;
+    int dilatevalue = 3;
     Mat hsvconvert;
     Mat hsvconvert2;
-    cvtColor(*img, hsvconvert, CV_BGR2GRAY );
+    Mat hsvconvertE;
+    Mat hsvconvertD;
+    Mat erodeElement = getStructuringElement(MORPH_RECT, Size(erodeValue,erodeValue));
+    Mat dilateElement = getStructuringElement(MORPH_RECT, Size(dilatevalue,dilatevalue));
+    cvtColor(*img, hsvconvert, CV_BGR2HSV);
     if (args)
     {
 
-        inRange(hsvconvert, cv::Scalar(args[0], args[1], args[2]), cv::Scalar(args[3], args[4], args[5]), hsvconvert2);
+        inRange(hsvconvert, Scalar(args[0], args[1], args[2]), Scalar(args[3], args[4], args[5]), hsvconvert2);
+        dilate(hsvconvert2, hsvconvert2, dilateElement);
+        erode(hsvconvert2, hsvconvert2, erodeElement);
+        erode(hsvconvert2, hsvconvert2, erodeElement);
+        dilate(hsvconvert2, hsvconvert2, dilateElement);
         imshow("window", hsvconvert2);
     }
     else
     {
-        inRange(hsvconvert, cv::Scalar(232, 0, 0), cv::Scalar(255, 0, 0), hsvconvert2);
+        inRange(hsvconvert, cv::Scalar(54, 89, 32), cv::Scalar(91, 255, 255), hsvconvert2);
+        dilate(hsvconvert2, hsvconvert2, dilateElement);
+        erode(hsvconvert2, hsvconvert2, erodeElement);
+        erode(hsvconvert2, hsvconvert2, erodeElement);
+        dilate(hsvconvert2, hsvconvert2, dilateElement);
+        imshow("window", hsvconvert2);
     }
     //threshold( hsvconvert, hsvconvert2, 1, 1, 1 );
 
