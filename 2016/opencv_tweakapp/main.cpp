@@ -60,7 +60,7 @@ int main()
     /// Create Windows
     namedWindow("window");
 
-    const int NUM_ARGS = 6;
+    const int NUM_ARGS = 5;
     int args[NUM_ARGS] = {0};
 
     for(int x = 0; x < NUM_ARGS; x++)
@@ -75,7 +75,7 @@ int main()
     Mat img;
     while(true)
     {
-        int ixCurrentImage = args[5];
+        int ixCurrentImage = args[NUM_ARGS-1];
         ixCurrentImage = min((int)ixCurrentImage, (int)testFiles.size());
         if(ixCurrentImage != ixLastImage)
         {
