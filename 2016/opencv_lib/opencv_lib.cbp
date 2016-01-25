@@ -16,7 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="/home/benjamin/OpenCV Lib/libopencv_core.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
 					<Add library="/home/benjamin/OpenCV Lib/libopencv_highgui.so" />
 					<Add library="/home/benjamin/OpenCV Lib/libopencv_imgcodecs.so" />
 					<Add library="/home/benjamin/OpenCV Lib/libopencv_imgproc.so" />
