@@ -1,0 +1,5 @@
+../testdata/images/s6.png
+255
+242
+346
+315

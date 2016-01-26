@@ -7,5 +7,6 @@
 		<Project filename="2016/opencv_tweakapp/opencv_tweakapp.cbp" />
 		<Project filename="2016/opencv_lib/opencv_lib.cbp" />
 		<Project filename="2016/testdata/testdata.cbp" />
+		<Project filename="2016/labeler/labeler.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

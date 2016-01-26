@@ -1,0 +1,5 @@
+../testdata/images/s2.png
+214
+291
+302
+369

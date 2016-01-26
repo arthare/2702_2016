@@ -1,0 +1,5 @@
+../testdata/images/auto-26.png
+266
+31
+400
+140

@@ -1,0 +1,5 @@
+../testdata/images/s4.png
+249
+201
+336
+281

@@ -1,0 +1,5 @@
+../testdata/images/auto-21.png
+185
+2
+313
+102

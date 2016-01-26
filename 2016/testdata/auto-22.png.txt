@@ -1,0 +1,5 @@
+../testdata/images/auto-22.png
+254
+26
+382
+133

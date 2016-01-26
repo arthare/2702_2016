@@ -1,0 +1,5 @@
+../testdata/images/auto-40.png
+157
+12
+286
+108
