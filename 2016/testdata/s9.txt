@@ -1,5 +1,0 @@
-../testdata/images/s9.png
-257
-55
-339
-137

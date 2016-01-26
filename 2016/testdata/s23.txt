@@ -1,5 +1,0 @@
-../testdata/images/s23.png
-313
-55
-399
-135

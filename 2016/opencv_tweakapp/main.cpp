@@ -59,6 +59,7 @@ int main()
 
     /// Create Windows
     namedWindow("window");
+    namedWindow("contours");
 
     const int NUM_ARGS = 5;
     int args[NUM_ARGS] = {0};

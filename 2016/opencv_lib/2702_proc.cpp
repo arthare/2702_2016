@@ -22,17 +22,50 @@ pos fixImage (Mat& inputImage, Mat& outputImage)
     erode(inputImage, outputImage, erodeElement);
 }
 
+pos findDrawContours(Mat& inputImage)
+{
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+    Mat result(inputImage);
+    int contourIdx=-1;
+    int thickness=-1;
+    int lineType=8;
+    int maxLevel=0;
+    findContours(inputImage, contours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+    drawContours(result , contours, contourIdx, Scalar(0, 255, 0), thickness, lineType, hierarchy, maxLevel);
+    imshow("contours", result);
+    //cout << "contours.size =" << contours.size() << endl;
+    //cout.flush();
+    if( contours.size() != 0 )
+    {
+        //double value = matchShapes(inputImage, contours[1], CV_CONTOURS_MATCH_I1, 0);
+        //cout << value << endl;
+    }
+    for(int i = 0; i < contours.size(); i++)
+    {
+        double value = matchShapes(inputImage, contours[i], CV_CONTOURS_MATCH_I1, 0);
+        cout << "contours.size =" << contours.size() << endl;
+        cout << "current contour =" << i << endl;
+        cout << ""
+        cout.flush();
+    }
+
+
+
+}
+
 pos HSV_convert(Mat* img, int* args)
 {
     Mat hsvconvert;
     Mat hsvconvert2;
-    cvtColor(*img, hsvconvert, CV_BGR2HSV);
     Mat outputImage;
+    cvtColor(*img, hsvconvert, CV_BGR2HSV);
     if (args)
     {
         inRange(hsvconvert, Scalar(args[0], args[1], args[2]), Scalar(args[3], 255, 255), hsvconvert2);
         fixImage(hsvconvert2, outputImage);
         imshow("window", outputImage);
+        findDrawContours(outputImage);
     }
     else
     {

@@ -1,5 +1,0 @@
-../testdata/images/s20.png
-313
-53
-400
-134
