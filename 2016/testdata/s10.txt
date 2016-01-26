@@ -1,5 +1,0 @@
-../testdata/images/s10.png
-255
-52
-342
-137

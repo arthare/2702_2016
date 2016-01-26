@@ -1,0 +1,5 @@
+../testdata/images/s8.png
+255
+53
+340
+135

@@ -1,0 +1,5 @@
+../testdata/images/s17.png
+254
+54
+340
+135

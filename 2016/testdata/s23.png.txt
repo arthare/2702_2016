@@ -1,0 +1,5 @@
+../testdata/images/s23.png
+311
+54
+398
+132

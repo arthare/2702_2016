@@ -1,0 +1,5 @@
+../testdata/images/s10.png
+253
+54
+338
+134

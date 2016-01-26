@@ -1,5 +1,0 @@
-../testdata/images/s21.png
-315
-53
-401
-134

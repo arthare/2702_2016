@@ -1,5 +1,0 @@
-../testdata/images/s13.png
-259
-53
-338
-136

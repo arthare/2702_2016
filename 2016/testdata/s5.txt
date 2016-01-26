@@ -1,5 +1,0 @@
-../testdata/images/s5.png
-57
-184
-165
-271

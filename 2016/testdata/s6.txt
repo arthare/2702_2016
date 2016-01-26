@@ -1,5 +1,0 @@
-../testdata/images/s6.png
-250
-236
-357
-323
