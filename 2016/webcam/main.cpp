@@ -1,6 +1,5 @@
 #include "opencv2/opencv.hpp"
 #include "../opencv_lib/2702_proc.h"
-#include <stdio.h>
 
 using namespace cv;
 
@@ -36,9 +35,15 @@ int main(int argc, char** argv)
         Mat frame2;
         cap >> frame;
         if( frame.empty() ) break; // end of video stream
-        //process (&frame, 0);
+
+        int start = getms();
+       process (&frame, 0);
+
+
+
+
         int now = getms();
-        printf("took %dms\n", (now-lastMs));
+        printf("took %dms,Process took %dms\n", (now-lastMs),(now-start));
         lastMs = now;
 
     }

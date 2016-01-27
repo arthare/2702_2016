@@ -1,6 +1,7 @@
 #include "opencv2/opencv.hpp"
 #include "../opencv_lib/2702_proc.h"
 #include <sstream>
+#include <stdio.h>
 
 using namespace std;
 using namespace cv;
@@ -41,6 +42,7 @@ int main(int argc, char** argv)
         circle(imgWithCircle, Point(mypos.x, mypos.y), 20, Scalar(255, 0, 0));
         imshow("window", imgWithCircle);
         waitKey(30);
+
 
     }
     // the camera will be closed automatically upon exit

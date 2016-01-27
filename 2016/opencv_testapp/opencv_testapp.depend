@@ -13,13 +13,17 @@
 1453584196 /home/rebels/code/2016/opencv_lib/2702_proc.h
 	<opencv2/core/core.hpp>
 
-1453565172 source:/home/pi/2702_2016/2016/opencv_testapp/main.cpp
+1453843244 source:/home/pi/2702_2016/2016/opencv_testapp/main.cpp
 	<iostream>
 	"2702_proc.h"
 	<opencv2/core/core.hpp>
 	<opencv2/imgproc/imgproc.hpp>
 	<opencv2/highgui/highgui.hpp>
+	<sys/types.h>
+	<dirent.h>
+	<sys/stat.h>
+	<fstream>
 
-1453561414 /home/pi/2702_2016/2016/opencv_lib//2702_proc.h
+1453843244 /home/pi/2702_2016/2016/opencv_lib//2702_proc.h
 	<opencv2/core/core.hpp>
 

@@ -9,19 +9,16 @@
 1453243864 /home/rebels/code/2016/webcam/2702_proc.h
 	<opencv2/core/core.hpp>
 
-<<<<<<< HEAD
 1453570859 source:/home/pi/2702_2016/2016/webcam/main.cpp
 	"opencv2/opencv.hpp"
 	"../opencv_lib/2702_proc.h"
 	<stdio.h>
 
-1453561414 /home/pi/2702_2016/2016/opencv_lib/2702_proc.h
-=======
 1453588912 source:/home/benjamin/2702_2016/2016/webcam/main.cpp
 	"opencv2/opencv.hpp"
 	"../opencv_lib/2702_proc.h"
 
 1453588912 /home/benjamin/2702_2016/2016/opencv_lib/2702_proc.h
->>>>>>> a52c5b0189aa8ac18fecaecb542afede58a4c6c6
+1453843244 /home/pi/2702_2016/2016/opencv_lib/2702_proc.h
 	<opencv2/core/core.hpp>
 
