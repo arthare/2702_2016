@@ -87,9 +87,14 @@ int main()
             in>> bottom;
 
             pos pt = process(&img, 0);
-            if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
+           if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
             {
                 cout<<"PASSED"<<endl;
+                passes ++;
+            }
+            else if (left < 0 && pt.x == -1 && pt.y == -1)
+            {
+                 cout<<"PASSED"<<endl;
                 passes ++;
             }
             else
