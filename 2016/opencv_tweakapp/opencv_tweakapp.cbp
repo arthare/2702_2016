@@ -2,21 +2,30 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="testdata" />
+		<Option title="opencv_tweakapp" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/testdata" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/opencv_tweakapp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="../opencv_lib" />
 				</Compiler>
+				<Linker>
+					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
+					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_highgui.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgcodecs.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgproc.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_videoio.so" />
+				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/testdata" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/opencv_tweakapp" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -30,7 +39,9 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -1,0 +1,5 @@
+../testdata/images/s21.png
+313
+55
+396
+134

@@ -16,14 +16,13 @@
 					<Add option="-lrt" />
 				</Compiler>
 				<Linker>
-					<Add library="../../../../../usr/local/lib/libopencv_core.so" />
-					<Add library="../../../../../usr/local/lib/libopencv_highgui.so" />
-					<Add library="../../../../../usr/local/lib/libopencv_imgproc.so" />
-					<Add library="../../../../../usr/local/lib/libopencv_ts.a" />
-					<Add library="../../../../../usr/local/lib/libopencv_video.so" />
-					<Add library="../../../../../usr/local/lib/libopencv_videoio.so" />
-					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
 					<Add library="/lib/arm-linux-gnueabihf/librt-2.13.so" />
+					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
+					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_highgui.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgcodecs.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgproc.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_videoio.so" />
 				</Linker>
 			</Target>
 			<Target title="Release">

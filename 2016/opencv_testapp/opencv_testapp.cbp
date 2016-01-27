@@ -13,14 +13,15 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="../opencv_lib" />
 				</Compiler>
 				<Linker>
 					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
-					<Add library="../../../opencv-3.1.0/build/lib/libopencv_core.so" />
-					<Add library="../../../opencv-3.1.0/build/lib/libopencv_highgui.so" />
-					<Add library="../../../opencv-3.1.0/build/lib/libopencv_imgcodecs.so" />
-					<Add library="../../../opencv-3.1.0/build/lib/libopencv_imgproc.so" />
-					<Add library="../../../opencv-3.1.0/build/lib/libopencv_videoio.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_highgui.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgcodecs.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_imgproc.so" />
+					<Add library="$(OPENCV_LIB)/libopencv_videoio.so" />
 				</Linker>
 			</Target>
 			<Target title="Release">

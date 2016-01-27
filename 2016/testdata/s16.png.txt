@@ -1,0 +1,5 @@
+../testdata/images/s16.png
+257
+54
+339
+135

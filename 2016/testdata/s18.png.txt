@@ -1,0 +1,5 @@
+../testdata/images/s18.png
+303
+53
+393
+133

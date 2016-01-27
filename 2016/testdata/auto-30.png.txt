@@ -1,0 +1,5 @@
+../testdata/images/auto-30.png
+248
+61
+374
+163

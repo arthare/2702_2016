@@ -1,0 +1,5 @@
+../testdata/images/s14.png
+254
+54
+341
+132

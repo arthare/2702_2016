@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
     if(!cap.open(0))
-        return 0;
+        return -1;
     // Brighness at -0.75 gives great contrast with green LEDS and retroreflective markers without natural light. with natural light it preforms like monkey hurlage.
     cap.set(CAP_PROP_CONTRAST,-0.75);
 

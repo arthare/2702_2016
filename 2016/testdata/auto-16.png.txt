@@ -1,0 +1,5 @@
+../testdata/images/auto-16.png
+217
+120
+351
+210
