@@ -12,6 +12,8 @@
 using namespace std;
 using namespace cv;
 
+#define SCALE_FACTOR 2
+
 
 int getdir (string dir, vector<string> &files)
 {
@@ -86,7 +88,10 @@ int main()
             in.open(strTxt.c_str());
             in>>imgFile;
             cout<<"which leads us to imgfile = "<<imgFile<<endl;
-            img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+            Mat tempFile;
+            tempFile = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+
+            resize(tempFile, img, Size(640 / SCALE_FACTOR,480 / SCALE_FACTOR));
             if(img.empty())
             {
               cout<<"Image "<<imgFile<<" was empty"<<endl;
@@ -95,7 +100,6 @@ int main()
             ixLastImage = ixCurrentImage;
         }
 
-        cout<<"processing with image: "<<ixCurrentImage<<endl;
         process(img, args);
 
         waitKey(30);
