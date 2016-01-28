@@ -4,6 +4,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#define SCALE_FACTOR 2
+
 using namespace std;
 using namespace cv;
 
@@ -43,11 +45,13 @@ int main(int argc, char** argv)
     VideoCapture cap;
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
-    if(!cap.open(1))
+    if(!cap.open(0))
         return -1;
 
     cap.set(CAP_PROP_CONTRAST, -0.75);
     cap.set(CAP_PROP_BRIGHTNESS, -0.75);
+    cap.set(CAP_PROP_FRAME_WIDTH, 640/SCALE_FACTOR);
+    cap.set(CAP_PROP_FRAME_HEIGHT, 320/SCALE_FACTOR);
     namedWindow("window");
     setMouseCallback("window", CallBackFunc, NULL);
     for(;;)
