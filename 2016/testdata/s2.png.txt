@@ -1,5 +1,0 @@
-../testdata/images/s2.png
-212
-289
-303
-373

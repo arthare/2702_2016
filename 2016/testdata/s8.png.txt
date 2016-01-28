@@ -1,5 +1,0 @@
-../testdata/images/s8.png
-252
-49
-342
-138

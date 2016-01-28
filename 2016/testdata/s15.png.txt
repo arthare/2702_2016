@@ -1,5 +1,0 @@
-../testdata/images/s15.png
-254
-54
-346
-136
