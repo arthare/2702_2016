@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define SCALE_FACTOR 2
+#define SCALE_FACTOR 4
 
 using namespace std;
 using namespace cv;
