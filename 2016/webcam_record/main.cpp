@@ -3,6 +3,8 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
+
 
 #define SCALE_FACTOR 4
 
@@ -64,6 +66,7 @@ int main(int argc, char** argv)
         circle(imgWithCircle, Point(mypos.x, mypos.y), 20, Scalar(255, 0, 0));
         imshow("window", imgWithCircle);
         waitKey(30);
+
 
     }
     // the camera will be closed automatically upon exit
