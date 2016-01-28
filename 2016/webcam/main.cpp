@@ -2,7 +2,7 @@
 #include "../opencv_lib/2702_proc.h"
 
 using namespace cv;
-
+#define SCALE_FACTOR 4
 int getms (void)
 {
     long            ms; // Milliseconds
@@ -27,6 +27,9 @@ int main(int argc, char** argv)
         return -1;
     // Brighness at -0.75 gives great contrast with green LEDS and retroreflective markers without natural light. with natural light it preforms like monkey hurlage.
     cap.set(CAP_PROP_CONTRAST,-0.75);
+    cap.set(CAP_PROP_FRAME_WIDTH,640/SCALE_FACTOR);
+    cap.set(CAP_PROP_FRAME_HEIGHT,480/SCALE_FACTOR); // set the scale factor for faster processing
+
 
     int lastMs = getms();
     for(;;)
@@ -37,7 +40,7 @@ int main(int argc, char** argv)
         if( frame.empty() ) break; // end of video stream
 
         int start = getms();
-       process (&frame, 0);
+        process (frame, 0);
 
 
 
