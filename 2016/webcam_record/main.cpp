@@ -1,26 +1,45 @@
 #include "opencv2/opencv.hpp"
 #include "../opencv_lib/2702_proc.h"
 #include <sstream>
+#include <sys/stat.h>
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
 
 Mat imgCurrent;
 int imgSaved = 0;
+
+string makeFileName(int img)
+{
+    stringstream ssSave;
+    ssSave<<"../testdata/images/auto-"<<imgSaved<<".png";
+    return ssSave.str();
+}
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
     if(event == EVENT_MBUTTONDOWN)
     {
-        stringstream ssSave;
-        ssSave<<"../testdata/images/auto-"<<imgSaved<<".png";
-        cout<<"trying to save to "<<ssSave.str()<<endl;
-        imwrite( ssSave.str().c_str(), imgCurrent );
+        string fileName = makeFileName(imgSaved);
+        cout<<"trying to save to "<<fileName<<endl;
+        imwrite( fileName.c_str(), imgCurrent );
         imgSaved++;
     }
 }
 
+bool fileExists (const std::string& name)
+{
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
+}
+
 int main(int argc, char** argv)
 {
+    while(fileExists(makeFileName(imgSaved)))
+    {
+        imgSaved++;
+    }
+
     VideoCapture cap;
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
