@@ -1,0 +1,5 @@
+../testdata/images/s22.png
+308
+49
+402
+140

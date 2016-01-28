@@ -1,0 +1,5 @@
+../testdata/images/s6.png
+249
+239
+354
+320

@@ -1,0 +1,5 @@
+../testdata/images/s12.png
+255
+53
+342
+139

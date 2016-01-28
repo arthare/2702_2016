@@ -1,0 +1,5 @@
+../testdata/images/auto-11.png
+497
+2
+637
+98

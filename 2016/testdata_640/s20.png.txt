@@ -1,0 +1,5 @@
+../testdata/images/s20.png
+305
+48
+403
+142

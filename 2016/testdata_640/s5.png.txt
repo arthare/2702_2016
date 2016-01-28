@@ -1,0 +1,5 @@
+../testdata/images/s5.png
+59
+188
+157
+266

@@ -1,0 +1,5 @@
+../testdata/images/auto-12-jan27.png
+183
+11
+341
+137

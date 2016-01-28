@@ -1,0 +1,5 @@
+../testdata/images/s3.png
+150
+349
+240
+434

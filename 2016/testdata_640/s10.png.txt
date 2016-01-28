@@ -1,0 +1,5 @@
+../testdata/images/s10.png
+249
+45
+345
+137
