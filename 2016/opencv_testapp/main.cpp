@@ -13,6 +13,20 @@ using namespace std;
 using namespace cv;
 
 
+int getms (void)
+{
+    long            ms; // Milliseconds
+    time_t          s;  // Seconds
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s  = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+
+    return s * 1000 + ms;
+}
+
 int getdir (string dir, vector<string> &files)
 {
     DIR *dp;
@@ -55,7 +69,7 @@ int main()
     getdir("../testdata/", testFiles);
 
     filterOutCrap(testFiles);
-
+    int totalTime = 0;
     int passes = 0;
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
@@ -85,8 +99,12 @@ int main()
             in>> top;
             in>> right;
             in>> bottom;
+            int before = getms();
 
             pos pt = process(img, 0);
+           int after = getms();
+           int time = after - before;
+           totalTime +=time;
            if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
             {
                 cout<<"PASSED"<<endl;
@@ -106,4 +124,6 @@ int main()
 
     }
     cout << passes << " of " << testFiles.size() << endl;
+    cout << "Total time = "<< totalTime << endl;
+    cout << "Average time = " << totalTime / testFiles.size() << endl;
 }

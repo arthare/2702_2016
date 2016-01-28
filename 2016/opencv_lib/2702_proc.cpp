@@ -26,6 +26,14 @@ pos temple(Mat img, int* args)
 
     /// Do the Matching and Normalize
     int match_method = args ? args[0] : 0;
+    if (match_method <=  CV_TM_SQDIFF)
+    {
+        match_method = CV_TM_SQDIFF;
+    }
+    else if(match_method >= CV_TM_CCOEFF_NORMED)
+    {
+        match_method = CV_TM_CCOEFF_NORMED;
+    }
 
     matchTemplate( img, templ, result, match_method );
     normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
