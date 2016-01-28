@@ -1,0 +1,5 @@
+../testdata/images/auto-4-jan27.png
+132
+52
+282
+193

@@ -1,5 +1,5 @@
 ../testdata/images/auto-22.png
-254
-26
+251
+22
 382
 133

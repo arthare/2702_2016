@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     {
         cap >> imgCurrent;
         if( imgCurrent.empty() ) break; // end of video stream
-        pos mypos = process(&imgCurrent, 0);
+        pos mypos = process(imgCurrent, 0);
 
         Mat imgWithCircle = imgCurrent.clone();
         circle(imgWithCircle, Point(mypos.x, mypos.y), 20, Scalar(255, 0, 0));

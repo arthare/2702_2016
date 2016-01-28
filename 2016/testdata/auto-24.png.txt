@@ -1,5 +1,5 @@
 ../testdata/images/auto-24.png
-270
-22
-404
+268
+19
+405
 129

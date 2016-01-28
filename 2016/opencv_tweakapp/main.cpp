@@ -96,7 +96,7 @@ int main()
         }
 
         cout<<"processing with image: "<<ixCurrentImage<<endl;
-        process(&img, args);
+        process(img, args);
 
         waitKey(30);
     }

@@ -6,4 +6,4 @@ struct pos {
     int x;
     int y;
 };
-pos process(cv::Mat*, int* args);
+pos process(cv::Mat, int* args);
