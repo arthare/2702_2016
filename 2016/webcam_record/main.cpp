@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 
+#define SCALE_FACTOR 2
+
 using namespace std;
 using namespace cv;
 
@@ -50,6 +52,8 @@ int main(int argc, char** argv)
 
     cap.set(CAP_PROP_CONTRAST, -0.75);
     cap.set(CAP_PROP_BRIGHTNESS, -0.75);
+    cap.set(CAP_PROP_FRAME_WIDTH, 640/SCALE_FACTOR);
+    cap.set(CAP_PROP_FRAME_HEIGHT, 480/SCALE_FACTOR);
     namedWindow("window");
     setMouseCallback("window", CallBackFunc, NULL);
     for(;;)

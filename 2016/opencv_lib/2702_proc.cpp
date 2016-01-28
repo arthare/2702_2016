@@ -9,13 +9,20 @@ using namespace cv;
 
 using namespace std;
 
+Mat templ;
 // does a template search!
 pos temple(Mat img, int* args)
 {
+    if(templ.empty())
+    {
+        templ = imread( "../opencv_lib/refrence.png", 1 );
+        resize(templ, templ, Size(16,16));
+    }
+    else
+    {
+        ///don't do anything
+    }
 
-    Mat templ;
-
-    templ = imread( "../opencv_lib/refrence.png", 1 );
 
     /// Create the result matrix
     Mat result;
@@ -36,7 +43,7 @@ pos temple(Mat img, int* args)
     }
 
     matchTemplate( img, templ, result, match_method );
-    normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
+    //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
     /// Localizing the best match with minMaxLoc
     double minVal; double maxVal; Point minLoc; Point maxLoc;

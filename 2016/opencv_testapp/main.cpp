@@ -12,6 +12,7 @@
 using namespace std;
 using namespace cv;
 
+#define SCALE_FACTOR 4
 
 int getms (void)
 {
@@ -89,8 +90,8 @@ int main()
           cout<<"NOT FOUND"<<endl;
         }
         else
-
         {
+            resize(img, img, Size(640 / SCALE_FACTOR,480 / SCALE_FACTOR));
             int left;
             int right;
             int top;
@@ -99,6 +100,15 @@ int main()
             in>> top;
             in>> right;
             in>> bottom;
+
+            if(left >= 0)
+            {
+                left /= SCALE_FACTOR;
+                top /= SCALE_FACTOR;
+                right /= SCALE_FACTOR;
+                top /= SCALE_FACTOR;
+            }
+
             int before = getms();
 
             pos pt = process(img, 0);
