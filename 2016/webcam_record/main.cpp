@@ -3,6 +3,8 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
+
 
 using namespace std;
 using namespace cv;
@@ -43,7 +45,7 @@ int main(int argc, char** argv)
     VideoCapture cap;
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
-    if(!cap.open(1))
+    if(!cap.open(0))
         return -1;
 
     cap.set(CAP_PROP_CONTRAST, -0.75);
@@ -60,6 +62,7 @@ int main(int argc, char** argv)
         circle(imgWithCircle, Point(mypos.x, mypos.y), 20, Scalar(255, 0, 0));
         imshow("window", imgWithCircle);
         waitKey(30);
+
 
     }
     // the camera will be closed automatically upon exit
