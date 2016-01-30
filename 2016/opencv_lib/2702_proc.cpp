@@ -75,7 +75,7 @@ pos temple(Mat img, int* args)
         Mat draw2 = img.clone();
         circle(draw2, matchLoc, 20, Scalar(0, 0, 0));
         circle(draw2, matchLoc, 19, Scalar(255, 255, 255));
-
+        templ.copyTo(draw2.rowRange(matchLoc.y, matchLoc.y + templ.rows).colRange(matchLoc.x, matchLoc.x + templ.cols));
         imshow("window2", draw2);
     }
 
