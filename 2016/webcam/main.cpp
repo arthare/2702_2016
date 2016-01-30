@@ -3,19 +3,6 @@
 
 using namespace cv;
 #define SCALE_FACTOR 4
-int getms (void)
-{
-    long            ms; // Milliseconds
-    time_t          s;  // Seconds
-    struct timespec spec;
-
-    clock_gettime(CLOCK_REALTIME, &spec);
-
-    s  = spec.tv_sec;
-    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
-
-    return s * 1000 + ms;
-}
 
 
 int main(int argc, char** argv)
