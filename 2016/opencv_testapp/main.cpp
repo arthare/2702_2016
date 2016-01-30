@@ -66,10 +66,15 @@ int main()
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
-
     filterOutCrap(testFiles);
     int totalTime = 0;
-    int passes = 0;
+
+    int therePasses = 0;
+    int thereTotal = 0;
+
+    int notTherePasses = 0;
+    int notThereTotal = 0;
+    int notThere = 0;
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
         const string& strTxt = testFiles[x];
@@ -104,25 +109,42 @@ int main()
            int after = getms();
            int time = after - before;
            totalTime +=time;
-           if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
+            if (left < 0)
             {
-                cout<<"PASSED"<<endl;
-                passes ++;
-            }
-            else if (left < 0 && pt.x == -1 && pt.y == -1)
-            {
-                 cout<<"PASSED"<<endl;
-                passes ++;
+                // the txt file said the target isn't there.  let's see how they guessed
+                if(pt.x == -1 && pt.y == -1)
+                {
+                    // they correctly guessed that it isn't there
+                    cout<<"PASSED"<<endl;
+                    notTherePasses ++;
+                }
+                else
+                {
+                    // they guessed it was there, but it's not!
+                    cout<<"FAILED"<<endl;
+                }
+                notThereTotal++;
             }
             else
             {
-                cout<<"FAILED"<<endl;
+                // left >= 0, that means the target IS present
+                if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
+                {
+                    cout<<"PASSED"<<endl;
+                    therePasses ++;
+                }
+                else
+                {
+                    cout<<"FAILED"<<endl;
+                }
+                thereTotal++;
             }
 
         }
 
     }
-    cout << passes << " of " << testFiles.size() << endl;
+    cout << therePasses << " of " << thereTotal << endl;
     cout << "Total time = "<< totalTime << endl;
     cout << "Average time = " << totalTime / testFiles.size() << endl;
+    cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
 }
