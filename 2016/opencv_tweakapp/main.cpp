@@ -61,6 +61,8 @@ int main()
 
     /// Create Windows
     namedWindow("window");
+    namedWindow("window2");
+    namedWindow("window3");
 
     const int NUM_ARGS = 5;
     int args[NUM_ARGS] = {0};

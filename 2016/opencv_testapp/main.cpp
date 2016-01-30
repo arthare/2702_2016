@@ -74,7 +74,11 @@ int main()
 
     int notTherePasses = 0;
     int notThereTotal = 0;
-    int notThere = 0;
+    //int notThere = 0;
+
+    long minValThere = 0;
+    long minValNotThere = 0;
+
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
         const string& strTxt = testFiles[x];
@@ -111,27 +115,32 @@ int main()
            totalTime +=time;
             if (left < 0)
             {
+                minValNotThere += pt.minVal;
                 // the txt file said the target isn't there.  let's see how they guessed
                 if(pt.x == -1 && pt.y == -1)
                 {
                     // they correctly guessed that it isn't there
                     cout<<"PASSED"<<endl;
                     notTherePasses ++;
+
                 }
                 else
                 {
                     // they guessed it was there, but it's not!
-                    cout<<"FAILED"<<endl;
+                    cout<<"FAILED"<< " : not there" <<endl;
                 }
                 notThereTotal++;
             }
             else
             {
+
+                minValThere += pt.minVal;
                 // left >= 0, that means the target IS present
                 if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
                 {
                     cout<<"PASSED"<<endl;
                     therePasses ++;
+
                 }
                 else
                 {
@@ -147,4 +156,6 @@ int main()
     cout << "Total time = "<< totalTime << endl;
     cout << "Average time = " << totalTime / testFiles.size() << endl;
     cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
+    cout << "average minval there : " << minValThere / thereTotal << endl;
+    cout << "average minval not there : " << minValNotThere / notThereTotal << endl;
 }
