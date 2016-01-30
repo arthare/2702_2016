@@ -1,0 +1,5 @@
+../testdata/images/auto-76.png
+66
+21
+102
+46

@@ -1,0 +1,5 @@
+../testdata/images/auto-81.png
+-1
+-1
+-1
+-1
