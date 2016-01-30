@@ -68,13 +68,32 @@ pos temple(Mat img, int* args)
     if(args)
     {
         Mat draw = result.clone();
-        circle(draw, matchLoc, 20, Scalar(255, 0, 0));
+        circle(draw, matchLoc, 20, Scalar(0, 0, 0));
+        circle(draw, matchLoc, 19, Scalar(255, 255, 255));
         imshow("window", draw);
+
+        Mat draw2 = img.clone();
+        circle(draw2, matchLoc, 20, Scalar(0, 0, 0));
+        circle(draw2, matchLoc, 19, Scalar(255, 255, 255));
+
+        imshow("window2", draw2);
     }
 
     pos temp;
-    temp.x = matchLoc.x;
-    temp.y = matchLoc.y;
+    if (minVal > 4000000)
+    {
+        temp.x = -1;
+        temp.y = -1;
+    }
+    else
+    {
+        temp.x = matchLoc.x;
+        temp.y = matchLoc.y;
+    }
+    temp.minVal = minVal;
+    temp.maxVal = maxVal;
+    //cout << temp.x << "," <<temp.y << endl;
+    cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
     return temp;
 }
 
