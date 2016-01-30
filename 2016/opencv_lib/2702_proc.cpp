@@ -5,6 +5,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <dirent.h>
+
+#include <sys/stat.h>
+
 using namespace cv;
 
 using namespace std;
@@ -74,48 +78,44 @@ pos temple(Mat img, int* args)
     return temp;
 }
 
-
-// part of HSV_Convert
-pos fixImage (Mat& inputImage, Mat& outputImage)
-{
-    int erodeValue = 3;
-    int dilatevalue = 3;
-
-    Mat erodeElement = getStructuringElement(MORPH_RECT, Size(erodeValue,erodeValue));
-    Mat dilateElement = getStructuringElement(MORPH_RECT, Size(dilatevalue,dilatevalue));
-
-    dilate(inputImage, inputImage, dilateElement);
-    erode(inputImage, inputImage, erodeElement);
-    erode(inputImage, outputImage, erodeElement);
-}
-pos HSV_convert(Mat img, int* args)
-{
-    Mat hsvconvert;
-    Mat hsvconvert2;
-    cvtColor(img, hsvconvert, CV_BGR2HSV);
-    Mat outputImage;
-    if (args)
-    {
-        inRange(hsvconvert, Scalar(args[0], args[1], args[2]), Scalar(args[3], 255, 255), hsvconvert2);
-        fixImage(hsvconvert2, outputImage);
-        imshow("window", outputImage);
-    }
-    else
-    {
-        inRange(hsvconvert, Scalar(54, 89, 32), Scalar(91, 255, 255), hsvconvert2);
-        fixImage(hsvconvert2, outputImage);
-    }
-    Moments center = moments(outputImage, true);
-    pos ret;
-    ret.x = center.m10/center.m00;
-    ret.y = center.m01/center.m00;
-    cout << ret.x << "," << ret.y << endl;
-    return ret;
-
-}
-
 pos process(Mat img, int* args)
 {
     return temple(img, args);
     //return HSV_convert(img, args);
+}
+int getms (void)
+{
+    long            ms; // Milliseconds
+    time_t          s;  // Seconds
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s  = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+
+    return s * 1000 + ms;
+}
+int getdir (string dir, vector<string> &files)
+{
+    DIR *dp;
+    struct dirent *dirp;
+    if((dp  = opendir(dir.c_str())) == NULL) {
+        return -1;
+    }
+
+    while ((dirp = readdir(dp)) != NULL) {
+
+        stringstream ss;
+        ss<<dir<<dirp->d_name;
+        files.push_back(ss.str());
+    }
+    closedir(dp);
+    return 0;
+}
+
+bool fileExists (const std::string& name)
+{
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
 }

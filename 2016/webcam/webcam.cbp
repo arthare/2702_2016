@@ -16,8 +16,8 @@
 					<Add option="-lrt" />
 				</Compiler>
 				<Linker>
-					<Add library="/lib/arm-linux-gnueabihf/librt-2.13.so" />
 					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
+					<Add library="$(librt)" />
 					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
 					<Add library="$(OPENCV_LIB)/libopencv_highgui.so" />
 					<Add library="$(OPENCV_LIB)/libopencv_imgcodecs.so" />
