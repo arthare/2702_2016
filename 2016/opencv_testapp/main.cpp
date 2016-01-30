@@ -43,6 +43,9 @@ int main()
     long minValThere = 0;
     long minValNotThere = 0;
 
+    int widthSum = 0;
+    int heightSum = 0;
+
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
         const string& strTxt = testFiles[x];
@@ -95,7 +98,8 @@ int main()
             }
             else
             {
-
+                widthSum += right - left;
+                heightSum += bottom - top;
                 minValThere += pt.minVal;
                 // left >= 0, that means the target IS present
                 if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
@@ -120,4 +124,6 @@ int main()
     cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
     cout << "average minval there : " << minValThere / thereTotal << endl;
     cout << "average minval not there : " << minValNotThere / notThereTotal << endl;
+    cout << "avg heights "<<(heightSum / thereTotal)<<endl;
+    cout << "avg widths "<<(widthSum / thereTotal)<<endl;
 }
