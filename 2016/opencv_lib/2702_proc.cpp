@@ -76,7 +76,7 @@ pos temple(Mat img, int* args)
     }
 
     pos temp;
-    if (minVal > 4000000)
+    if (minVal > 4800000)
     {
         temp.x = -1;
         temp.y = -1;
@@ -89,7 +89,7 @@ pos temple(Mat img, int* args)
     temp.minVal = minVal;
     temp.maxVal = maxVal;
     //cout << temp.x << "," <<temp.y << endl;
-    cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
+    //cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
     return temp;
 }
 

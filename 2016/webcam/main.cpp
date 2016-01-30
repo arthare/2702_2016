@@ -40,13 +40,13 @@ int main(int argc, char** argv)
         if( frame.empty() ) break; // end of video stream
 
         int start = getms();
-        process (frame, 0);
+        pos pt = process (frame, 0);
 
 
 
 
         int now = getms();
-        printf("took %dms,Process took %dms\n", (now-lastMs),(now-start));
+        printf("took %dms,Process took %dms, x = %d, y = %d, minVal = %ld\n", (now-lastMs),(now-start), pt.x, pt.y,pt.minVal);
         lastMs = now;
 
     }

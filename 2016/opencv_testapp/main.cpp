@@ -89,8 +89,6 @@ int main()
 
         in>>imgFile;
 
-        cout<<"processing with image: "<<x<<"...";
-
         Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
         if(img.empty())
         {
@@ -120,14 +118,14 @@ int main()
                 if(pt.x == -1 && pt.y == -1)
                 {
                     // they correctly guessed that it isn't there
-                    cout<<"PASSED"<<endl;
+                    //cout<<"PASSED"<< " (: not there)" <<endl;
                     notTherePasses ++;
 
                 }
                 else
                 {
                     // they guessed it was there, but it's not!
-                    cout<<"FAILED"<< " : not there" <<endl;
+                    cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minVal<<endl;
                 }
                 notThereTotal++;
             }
@@ -138,13 +136,13 @@ int main()
                 // left >= 0, that means the target IS present
                 if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
                 {
-                    cout<<"PASSED"<<endl;
+                    //cout<<"PASSED"<<endl;
                     therePasses ++;
 
                 }
                 else
                 {
-                    cout<<"FAILED"<<endl;
+                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minVal<<endl;
                 }
                 thereTotal++;
             }
