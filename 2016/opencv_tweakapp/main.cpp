@@ -5,37 +5,15 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <sys/types.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include <fstream>
 
 using namespace std;
 using namespace cv;
 
+#define SCALE_FACTOR 2
 
-int getdir (string dir, vector<string> &files)
-{
-    DIR *dp;
-    struct dirent *dirp;
-    if((dp  = opendir(dir.c_str())) == NULL) {
-        return -1;
-    }
 
-    while ((dirp = readdir(dp)) != NULL) {
 
-        stringstream ss;
-        ss<<dir<<dirp->d_name;
-        files.push_back(ss.str());
-    }
-    closedir(dp);
-    return 0;
-}
-
-bool fileExists (const std::string& name)
-{
-  struct stat buffer;
-  return (stat (name.c_str(), &buffer) == 0);
-}
 void filterOutCrap(vector<string>& crapFiles)
 {
     for(int x = 0; x < crapFiles.size(); x++ )
@@ -59,7 +37,8 @@ int main()
 
     /// Create Windows
     namedWindow("window");
-    namedWindow("contours");
+    namedWindow("window2");
+    namedWindow("window3");
 
     const int NUM_ARGS = 5;
     int args[NUM_ARGS] = {0};
@@ -87,7 +66,10 @@ int main()
             in.open(strTxt.c_str());
             in>>imgFile;
             cout<<"which leads us to imgfile = "<<imgFile<<endl;
-            img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+            Mat tempFile;
+            tempFile = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+
+            resize(tempFile, img, Size(640 / SCALE_FACTOR,480 / SCALE_FACTOR));
             if(img.empty())
             {
               cout<<"Image "<<imgFile<<" was empty"<<endl;
@@ -96,8 +78,7 @@ int main()
             ixLastImage = ixCurrentImage;
         }
 
-        cout<<"processing with image: "<<ixCurrentImage<<endl;
-        process(&img, args);
+        process(img, args);
 
         waitKey(30);
     }

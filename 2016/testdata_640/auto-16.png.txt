@@ -1,0 +1,5 @@
+../testdata/images/auto-16.png
+213
+124
+351
+209

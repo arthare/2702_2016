@@ -1,0 +1,5 @@
+../testdata/images/s23.png
+311
+53
+401
+133

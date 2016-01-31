@@ -1,0 +1,5 @@
+../testdata/images/auto-42.png
+81
+26
+122
+49

@@ -13,9 +13,11 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-lrt" />
 				</Compiler>
 				<Linker>
 					<Add library="../opencv_lib/bin/Debug/libopencv_lib.a" />
+					<Add library="$(librt)" />
 					<Add library="$(OPENCV_LIB)/libopencv_core.so" />
 					<Add library="$(OPENCV_LIB)/libopencv_highgui.so" />
 					<Add library="$(OPENCV_LIB)/libopencv_imgcodecs.so" />
@@ -39,11 +41,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="../opencv_lib" />
 		</Compiler>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

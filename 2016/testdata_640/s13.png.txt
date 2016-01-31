@@ -1,0 +1,5 @@
+../testdata/images/s13.png
+253
+50
+341
+139

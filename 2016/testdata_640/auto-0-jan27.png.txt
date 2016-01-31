@@ -1,0 +1,5 @@
+../testdata/images/auto-0-jan27.png
+218
+65
+332
+147

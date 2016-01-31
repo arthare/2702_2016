@@ -1,0 +1,5 @@
+../testdata/images/auto-20.png
+210
+122
+357
+223

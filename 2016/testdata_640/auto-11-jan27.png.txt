@@ -1,0 +1,5 @@
+../testdata/images/auto-11-jan27.png
+190
+21
+340
+141

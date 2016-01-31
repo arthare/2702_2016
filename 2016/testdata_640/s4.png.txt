@@ -1,0 +1,5 @@
+../testdata/images/s4.png
+246
+201
+337
+284

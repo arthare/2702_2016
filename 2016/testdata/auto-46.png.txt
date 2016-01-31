@@ -1,0 +1,5 @@
+../testdata/images/auto-46.png
+83
+21
+123
+47
