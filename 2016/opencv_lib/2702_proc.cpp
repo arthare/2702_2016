@@ -101,23 +101,29 @@ Mat templR;
     //cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
     return temp;
 } */
-void drawCircle (Mat& img, Mat& result, Point matchLoc)
+void drawCircle (Mat& img, Mat& result, Point matchLocL, Point matchLocR)
 {
-        circle(result, matchLoc, 20, Scalar(0, 0, 0));
-        circle(result, matchLoc, 19, Scalar(255, 255, 255));
+        circle(result, matchLocL, 20, Scalar(0, 255, 255));
+        circle(result, matchLocL, 19, Scalar(255, 255, 255));
+
+        circle(result, matchLocR, 20, Scalar(255, 0, 0));
+        circle(result, matchLocR, 19, Scalar(255, 255, 255));
         imshow("window", result);
 
-        circle(img, matchLoc, 20, Scalar(0, 0, 0));
-        circle(img, matchLoc, 19, Scalar(255, 255, 255));
+        circle(img, matchLocL, 20, Scalar(0, 255, 255));
+        circle(img, matchLocL, 19, Scalar(255, 255, 255));
+
+        circle(img, matchLocR, 20, Scalar(255, 0, 0));
+        circle(img, matchLocR, 19, Scalar(255, 255, 255));
         imshow("window2", img);
 }
 
 pos temple(Mat img, int* args)
 {
-    if(templL.empty() /*&& templR.empty()*/)
+    if(templL.empty() && templR.empty())
     {
-        templL = imread( "../opencv_lib/refrence.png", 1 );
-        //templR = imread( "../opencv_lib/refrenceR.png", 1 );
+        templL = imread( "../opencv_lib/refrenceL.png", 1 );
+        templR = imread( "../opencv_lib/refrenceR.png", 1 );
         //resize(templ, templ, Size(64,64));
     }
     // Create the result matrix
@@ -127,9 +133,9 @@ pos temple(Mat img, int* args)
 
     resultL.create( result_rowsL, result_colsL, CV_32FC1 );
 
-    //Mat resultR;
-    //int result_colsR =  img.cols - templR.cols + 1;
-    //int result_rowsR = img.rows - templR.rows + 1;
+    Mat resultR;
+    int result_colsR =  img.cols - templR.cols + 1;
+    int result_rowsR = img.rows - templR.rows + 1;
 
     //resultR.create( result_rowsR, result_colsR, CV_32FC1 );
 
@@ -155,30 +161,30 @@ pos temple(Mat img, int* args)
     merge(channels, fin_img); */
 
     matchTemplate( img, templL, resultL, match_method );
-    //matchTemplate( img, templR, resultR, match_method );
+    matchTemplate( img, templR, resultR, match_method );
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
     /// Localizing the best match with minMaxLoc
     double minValL; double maxValL; Point minLocL; Point maxLocL;
     Point matchLocL;
 
-    //double minValR; double maxValR; Point minLocR; Point maxLocR;
-    //Point matchLocR;
+    double minValR; double maxValR; Point minLocR; Point maxLocR;
+    Point matchLocR;
 
 
     minMaxLoc( resultL, &minValL, &maxValL, &minLocL, &maxLocL, Mat() );
-    //minMaxLoc( resultR, &minValR, &maxValR, &minLocR, &maxLocR, Mat() );
+    minMaxLoc( resultR, &minValR, &maxValR, &minLocR, &maxLocR, Mat() );
 
     /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
     if( match_method  == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED )
     {
         matchLocL = minLocL;
-        //matchLocR = minLocR;
+        matchLocR = minLocR;
     }
     else
     {
         matchLocL = maxLocL;
-        //matchLocR = maxLocR;
+        matchLocR = maxLocR;
     }
 
     if(args)
@@ -187,23 +193,25 @@ pos temple(Mat img, int* args)
         Mat imgDraw = img.clone();
 
         templL.copyTo(imgDraw.rowRange(matchLocL.y, matchLocL.y + templL.rows).colRange(matchLocL.x, matchLocL.x + templL.cols));
-        //templR.copyTo(imgDraw.rowRange(matchLocR.y, matchLocR.y + templR.rows).colRange(matchLocR.x, matchLocR.x + templR.cols));
-        drawCircle(imgDraw, resultDraw, matchLocL);
-        //drawCircle(imgDraw, resultDraw, matchLocR);
+        templR.copyTo(imgDraw.rowRange(matchLocR.y, matchLocR.y + templR.rows).colRange(matchLocR.x, matchLocR.x + templR.cols));
+        drawCircle(imgDraw, resultDraw, matchLocL, matchLocR);
     }
+
     pos temp;
-    if (minValL > 19600000)
+
+    /*if (minValL > 6870000)
     {
         temp.x = -1;
         temp.y = -1;
     }
-    else
+    else*/
     {
-        temp.x = matchLocL.x + templL.cols/2;
-        temp.y = matchLocL.y + templL.rows/2;
+        temp.x = (matchLocL.x + matchLocR.x) / 2;
+        temp.y = (matchLocL.y + matchLocR.y) / 2;
     }
-    temp.minValL = minValL;
-    temp.maxValL = maxValL;
+    temp.minValL = min(minValL, minValR);
+    temp.maxValL = max(maxValL, maxValR);
+
     //cout << temp.x << "," <<temp.y << endl;
     //cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
     return temp;
