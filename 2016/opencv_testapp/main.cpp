@@ -112,6 +112,7 @@ int main()
                 }
                 else
                 {
+                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minValL<<endl;
                     {
                         // draw the image and where they said the target was
                        Mat show = img.clone();
@@ -121,9 +122,8 @@ int main()
                        cout << pt.x << "," << pt.y << endl;
                        rectangle(show, Point(left,top), Point(right,bottom), Scalar(255,255,255));
                        imshow("window", show);
-                        //waitKey(0);
+                       waitKey(0);
                     }
-                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minValL<<endl;
                 }
                 thereTotal++;
             }

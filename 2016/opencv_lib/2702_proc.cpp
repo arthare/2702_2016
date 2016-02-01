@@ -207,7 +207,7 @@ pos temple(Mat img, int* args)
     else*/
     {
         temp.x = (matchLocL.x + matchLocR.x) / 2;
-        temp.y = (matchLocL.y + matchLocR.y) / 2;
+        temp.y = ((matchLocL.y + matchLocR.y) / 2);
     }
     temp.minValL = min(minValL, minValR);
     temp.maxValL = max(maxValL, maxValR);
