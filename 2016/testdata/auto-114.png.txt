@@ -1,0 +1,5 @@
+../testdata/images/auto-114.png
+3
+64
+40
+98
