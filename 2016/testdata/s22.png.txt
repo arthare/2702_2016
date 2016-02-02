@@ -1,5 +1,0 @@
-../testdata/images/s22.png
-312
-53
-399
-135

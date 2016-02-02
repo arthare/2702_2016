@@ -1,5 +1,0 @@
-../testdata/images/s11.png
-254
-54
-340
-136

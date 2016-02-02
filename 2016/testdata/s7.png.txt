@@ -1,5 +1,0 @@
-../testdata/images/s7.png
-133
-295
-222
-389

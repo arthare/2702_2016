@@ -124,20 +124,7 @@ pos temple(Mat img, int* args)
     {
         templL = imread( "../opencv_lib/refrenceL.png", 1 );
         templR = imread( "../opencv_lib/refrenceR.png", 1 );
-        //resize(templ, templ, Size(64,64));
     }
-    // Create the result matrix
-    Mat resultL;
-    int result_colsL =  img.cols - templL.cols + 1;
-    int result_rowsL = img.rows - templL.rows + 1;
-
-    resultL.create( result_rowsL, result_colsL, CV_32FC1 );
-
-    Mat resultR;
-    int result_colsR =  img.cols - templR.cols + 1;
-    int result_rowsR = img.rows - templR.rows + 1;
-
-    //resultR.create( result_rowsR, result_colsR, CV_32FC1 );
 
     /// Do the Matching and Normalize
     int match_method = args ? args[0] : 0;
@@ -150,16 +137,30 @@ pos temple(Mat img, int* args)
         match_method = CV_TM_CCOEFF_NORMED;
     }
 
-/*    Mat channel[3];
-    split(img, channel);
-    Mat fin_img;
-    Mat e = Mat::zeros(Size(img.cols, img.rows), CV_8UC1);
-    vector<Mat> channels;
-    channels.push_back(e);
-    channels.push_back(channel[1]);
-    channels.push_back(e);
-    merge(channels, fin_img); */
+    Mat channels[3];
+    split(img, channels);
 
+    Mat edgeDetect;
+    if(args)
+    {
+        Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
+        imshow("window2", edgeDetect);
+
+        pos fake;
+        return fake;
+    }
+    else
+    {
+        Canny(channels[1], edgeDetect, 127, 255);
+        imshow("window2", edgeDetect);
+
+        pos fake;
+        return fake;
+    }
+
+
+    Mat resultL;
+    Mat resultR;
     matchTemplate( img, templL, resultL, match_method );
     matchTemplate( img, templR, resultR, match_method );
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );

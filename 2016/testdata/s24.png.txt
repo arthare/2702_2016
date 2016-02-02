@@ -1,5 +1,0 @@
-../testdata/images/s24.png
-311
-54
-398
-133
