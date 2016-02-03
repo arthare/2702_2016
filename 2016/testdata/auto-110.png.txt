@@ -1,0 +1,5 @@
+../testdata/images/auto-110.png
+72
+43
+107
+72
