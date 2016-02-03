@@ -26,7 +26,38 @@ void filterOutCrap(vector<string>& crapFiles)
         }
     }
 }
+
+
+int runOnce(int par1, int par2);
+
 int main()
+{
+
+    int bestx = 0;
+    int besty = 0;
+    int store = 0;
+
+
+    for(int x = 0; x < 255; x += 4)
+    {
+        for(int y = 0; y < 255; y += 4)
+        {
+            cout.setstate(std::ios_base::badbit);
+            int thisTry = runOnce(x, y);
+            cout.clear();
+            if(thisTry > store)
+            {
+                bestx = x;
+                besty = y;
+                store = thisTry;
+                cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty << endl;
+            }
+        }
+    }
+}
+
+
+int runOnce(int par1, int par2)
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
@@ -75,8 +106,10 @@ int main()
             in>> bottom;
 
             int before = getms();
-
-            pos pt = process(img, 0);
+            int args[3] = {0};
+            args[1] = par1;
+            args[2] = par2;
+            pos pt = process(img, args);
            int after = getms();
            int time = after - before;
            totalTime +=time;
@@ -115,14 +148,14 @@ int main()
                     cout<<"FAILED for "<<imgFile<< "minVal " << pt.minValL<<endl;
                     {
                         // draw the image and where they said the target was
-                       Mat show = img.clone();
+                       /*Mat show = img.clone();
                        circle(show,Point(pt.x, pt.y) , 20, Scalar(255, 0, 0));
                        circle(show,Point(pt.x, pt.y) , 3, Scalar(0, 0, 255));
                        cout << left << "," << top << "," << right << "," << bottom << endl;
                        cout << pt.x << "," << pt.y << endl;
                        rectangle(show, Point(left,top), Point(right,bottom), Scalar(255,255,255));
-                       imshow("window", show);
-                       waitKey(0);
+                       imshow("window", show);*/
+                       //waitKey(0);
                     }
                 }
                 thereTotal++;
@@ -131,7 +164,7 @@ int main()
         }
 
     }
-    cout << therePasses << " of " << thereTotal << endl;
+    /*cout << therePasses << " of " << thereTotal << endl;
     cout << "Total time = "<< totalTime << endl;
     cout << "Average time = " << totalTime / testFiles.size() << endl;
     cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
@@ -140,4 +173,6 @@ int main()
     cout << "average minval : " << (minValThere / thereTotal + minValNotThere / notThereTotal) / 2 << endl;
     cout << "avg heights "<<(heightSum / thereTotal)<<endl;
     cout << "avg widths "<<(widthSum / thereTotal)<<endl;
+*/
+    return therePasses;
 }
