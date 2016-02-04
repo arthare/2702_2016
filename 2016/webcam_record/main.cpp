@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     VideoCapture cap;
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
-    if(!cap.open(0)) //switch to thius for the built-in camera
+    if(!cap.open(1)) //switch to thius for the built-in camera
         return -1;
 
     cap.set(CAP_PROP_CONTRAST, -0.75);

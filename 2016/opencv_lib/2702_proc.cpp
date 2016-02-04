@@ -184,6 +184,7 @@ int getdir (string dir, vector<string> &files)
 
         stringstream ss;
         ss<<dir<<dirp->d_name;
+        cout << ss.str()<<endl;
         files.push_back(ss.str());
     }
     closedir(dp);

@@ -1,0 +1,5 @@
+../testdata/images/auto-138.png
+5
+34
+48
+57

@@ -43,6 +43,26 @@ int g_top;
 int g_right;
 int g_bottom;
 
+string myReplace(const std::string& input, const std::string& oldStr, const std::string& newStr){
+
+  string str = input;
+  size_t pos = 0;
+  while((pos = str.find(oldStr, pos)) != std::string::npos){
+     str.replace(pos, oldStr.length(), newStr);
+     pos += newStr.length();
+  }
+  return str;
+}
+
+string textDestination(const string& badPath)
+{
+    return myReplace(badPath, "images/unlabeled/", "");
+}
+string imageDestination(const string& badPath)
+{
+    return myReplace(badPath, "/unlabeled", "");
+}
+
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
      if  ( event == EVENT_LBUTTONDOWN )
@@ -62,8 +82,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
                 ssFile<<".txt";
 
                 ofstream out;
-                out.open(ssFile.str().c_str());
-                out<<currentFile<<endl;
+                out.open(textDestination(ssFile.str()).c_str());
+                out<<imageDestination(currentFile)<<endl;
                 out<<min(g_left, g_right)<<endl;
                 out<<min(g_top, g_bottom)<<endl;
                 out<<max(g_left, g_right)<<endl;
@@ -83,8 +103,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
         ssFile<<".txt";
 
         ofstream out;
-        out.open(ssFile.str().c_str());
-        out<<currentFile<<endl;
+        out.open(textDestination(ssFile.str()).c_str());
+        out<<imageDestination(currentFile)<<endl;
         out<<-1<<endl;
         out<<-1<<endl;
         out<<-1<<endl;
@@ -125,7 +145,7 @@ void filterOutCrap(vector<string>& crapFiles)
 int main()
 {
     vector<string> testFiles;
-    getdir("../testdata/images/", testFiles);
+    getdir("../testdata/images/unlabeled/", testFiles);
     filterOutCrap(testFiles);
     /// Create Windows
     namedWindow("window");
