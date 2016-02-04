@@ -241,6 +241,14 @@ pos temple(Mat original, int* args)
     return temp;
 
 
+    while ((dirp = readdir(dp)) != NULL) {
+
+        stringstream ss;
+        ss<<dir<<dirp->d_name;
+        files.push_back(ss.str());
+    }
+    closedir(dp);
+    return 0;
 }
 
 
@@ -249,8 +257,8 @@ pos temple(Mat original, int* args)
 
 pos process(Mat img, int* args)
 {
-    return temple(img, args);
-    //return HSV_convert(img, args);
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
 }
 int getms (void)
 {
