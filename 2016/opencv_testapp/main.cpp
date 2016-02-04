@@ -121,7 +121,7 @@ int runOnce(int* args)
            totalTime +=time;
             if (left < 0)
             {
-                minValNotThere += pt.minValL;
+                minValNotThere += pt.minVal;
                 // the txt file said the target isn't there.  let's see how they guessed
                 if(pt.x == -1 && pt.y == -1)
                 {
@@ -133,7 +133,7 @@ int runOnce(int* args)
                 else
                 {
                     // they guessed it was there, but it's not!
-                    cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minValL<<endl;
+                    cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minVal<<endl;
                 }
                 notThereTotal++;
             }
@@ -141,7 +141,7 @@ int runOnce(int* args)
             {
                 widthSum += right - left;
                 heightSum += bottom - top;
-                minValThere += pt.minValL;
+                minValThere += pt.minVal;
                 // left >= 0, that means the target IS present
                 if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
                 {
@@ -151,7 +151,7 @@ int runOnce(int* args)
                 }
                 else
                 {
-                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minValL<<endl;
+                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minVal<<endl;
                     {
                         // draw the image and where they said the target was
                        /*Mat show = img.clone();

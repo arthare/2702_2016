@@ -31,15 +31,6 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     }
 }
 
-<<<<<<< HEAD
-bool fileExists (const std::string& name)
-{
-  struct stat buffer;
-  return (stat (name.c_str(), &buffer) == 0);
-}
-=======
->>>>>>> 8a929dfb7e13ffa3a952a213666248b4c982e04c
-
 int main(int argc, char** argv)
 {
     while(fileExists(makeFileName(imgSaved)))

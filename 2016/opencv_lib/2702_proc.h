@@ -6,8 +6,8 @@
 struct pos {
     int x;
     int y;
-    long minValL;
-    long maxValL;
+    long minVal;
+    long maxVal;
 };
 pos process(cv::Mat, int* args);
 
