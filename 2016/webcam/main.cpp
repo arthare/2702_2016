@@ -3,19 +3,6 @@
 
 using namespace cv;
 #define SCALE_FACTOR 4
-int getms (void)
-{
-    long            ms; // Milliseconds
-    time_t          s;  // Seconds
-    struct timespec spec;
-
-    clock_gettime(CLOCK_REALTIME, &spec);
-
-    s  = spec.tv_sec;
-    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
-
-    return s * 1000 + ms;
-}
 
 
 int main(int argc, char** argv)
@@ -40,13 +27,13 @@ int main(int argc, char** argv)
         if( frame.empty() ) break; // end of video stream
 
         int start = getms();
-        process (frame, 0);
+        pos pt = process (frame, 0);
 
 
 
 
         int now = getms();
-        printf("took %dms,Process took %dms\n", (now-lastMs),(now-start));
+        printf("took %dms,Process took %dms, x = %d, y = %d, minVal = %ld\n", (now-lastMs),(now-start), pt.x, pt.y,pt.minVal);
         lastMs = now;
 
     }

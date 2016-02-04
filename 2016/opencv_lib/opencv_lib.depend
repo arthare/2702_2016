@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1454186235 source:/home/benjamin/code/2016/opencv_lib/2702_proc.cpp
+	"2702_proc.h"
+	<iostream>
+	<opencv2/core/core.hpp>
+	<opencv2/imgproc/imgproc.hpp>
+	<opencv2/highgui/highgui.hpp>
+	<dirent.h>
+	<sys/stat.h>
+
+1454182186 /home/benjamin/code/2016/opencv_lib/2702_proc.h
+	<string>
+	<vector>
+	<opencv2/core/core.hpp>
+
+1454363705 source:/home/benjamin/codeBenjamin/2016/opencv_lib/2702_proc.cpp
+	"2702_proc.h"
+	<iostream>
+	<opencv2/core/core.hpp>
+	<opencv2/imgproc/imgproc.hpp>
+	<opencv2/highgui/highgui.hpp>
+	<dirent.h>
+	<sys/stat.h>
+
+1454182186 /home/benjamin/codeBenjamin/2016/opencv_lib/2702_proc.h
+	<string>
+	<vector>
+	<opencv2/core/core.hpp>
+

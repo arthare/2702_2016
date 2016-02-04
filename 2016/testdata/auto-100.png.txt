@@ -1,0 +1,5 @@
+../testdata/images/auto-100.png
+43
+13
+95
+45
