@@ -28,10 +28,14 @@ void filterOutCrap(vector<string>& crapFiles)
 }
 
 
-int runOnce(int par1, int par2);
+int runOnce(int* args);
 
 int main()
 {
+    cout<<"Here's the test with default (on-robot) args"<<endl;
+    runOnce(0);
+    cout<<"^^^^^^^^^^"<<endl;
+    cout<<"Above: the results for on-robot args"<<endl;
 
     int bestx = 0;
     int besty = 0;
@@ -43,7 +47,12 @@ int main()
         for(int y = 0; y < 255; y += 4)
         {
             cout.setstate(std::ios_base::badbit);
-            int thisTry = runOnce(x, y);
+
+            int args[3] = {0};
+            args[1] = x;
+            args[2] = y;
+
+            int thisTry = runOnce(args);
             cout.clear();
             if(thisTry > store)
             {
@@ -57,7 +66,7 @@ int main()
 }
 
 
-int runOnce(int par1, int par2)
+int runOnce(int* args)
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
@@ -106,9 +115,6 @@ int runOnce(int par1, int par2)
             in>> bottom;
 
             int before = getms();
-            int args[3] = {0};
-            args[1] = par1;
-            args[2] = par2;
             pos pt = process(img, args);
            int after = getms();
            int time = after - before;
@@ -164,7 +170,7 @@ int runOnce(int par1, int par2)
         }
 
     }
-    /*cout << therePasses << " of " << thereTotal << endl;
+    cout << therePasses << " of " << thereTotal << endl;
     cout << "Total time = "<< totalTime << endl;
     cout << "Average time = " << totalTime / testFiles.size() << endl;
     cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
@@ -173,6 +179,6 @@ int runOnce(int par1, int par2)
     cout << "average minval : " << (minValThere / thereTotal + minValNotThere / notThereTotal) / 2 << endl;
     cout << "avg heights "<<(heightSum / thereTotal)<<endl;
     cout << "avg widths "<<(widthSum / thereTotal)<<endl;
-*/
+
     return therePasses;
 }

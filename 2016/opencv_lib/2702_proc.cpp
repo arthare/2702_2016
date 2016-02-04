@@ -182,7 +182,7 @@ pos temple(Mat original, int* args)
     }
     else
     {
-        Canny(channels[1], edgeDetect, 52, 128);
+        Canny(channels[1], edgeDetect, 156, 384);
     }
     //cout<<"img type: "<< edgeDetect.type()<<endl;
     //cout<<"img depth"<< edgeDetect.depth()<<endl;
