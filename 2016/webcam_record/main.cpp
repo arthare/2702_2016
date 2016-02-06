@@ -17,7 +17,7 @@ int imgSaved = 0;
 string makeFileName(int img)
 {
     stringstream ssSave;
-    ssSave<<"../testdata/images/auto-"<<imgSaved<<".png";
+    ssSave<<"../testdata/images/unlabeled/auto-"<<imgSaved<<".png";
     return ssSave.str();
 }
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)

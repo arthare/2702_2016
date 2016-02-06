@@ -88,7 +88,7 @@ pos temple(Mat original, int* args)
     split(original, channels);
 
     {
-        const float stdDevGoal = args ? args[3] : 46.0f;
+        const float stdDevGoal = args ? args[3] : 34.0f;
         Mat& green = channels[1];
         Scalar mean;
         Scalar stddev;
@@ -116,7 +116,7 @@ pos temple(Mat original, int* args)
     }
     else
     {
-        Canny(channels[1], edgeDetect, 3*113, 3*67);
+        Canny(channels[1], edgeDetect, 3*110, 3*113);
     }
     //cout<<"img type: "<< edgeDetect.type()<<endl;
     //cout<<"img depth"<< edgeDetect.depth()<<endl;

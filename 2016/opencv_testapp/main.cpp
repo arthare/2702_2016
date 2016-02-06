@@ -49,9 +49,9 @@ int main()
         cout.setstate(std::ios_base::badbit);
 
         int args[3] = {0};
-        args[1] = rand() % 255;
-        args[2] = rand() % 255;
-        args[3] = rand() % 80 + 20;
+        args[1] = rand() % 41 + 90;
+        args[2] = rand() % 41 + 90;
+        args[3] = rand() % 35 + 20;
 
         int thisTry = runOnce(args);
         cout.clear();
