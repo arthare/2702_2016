@@ -60,7 +60,7 @@ int main()
         0, // edge2.2
     };
     const int UPPER_BOUNDS[] = {
-        255,
+        1,
         255, // edge1.1
         255, // edge1.2
         45, // stddev stretch
@@ -82,6 +82,8 @@ int main()
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
                 args[a] = randomNumber(LOWER_BOUNDS[a],UPPER_BOUNDS[a]);
+                args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
+                args[a] = max(args[a], LOWER_BOUNDS[a]);
             }
         }
         else
@@ -90,6 +92,8 @@ int main()
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
                 args[a] = randomNumber(best[a] - searchRange, best[a] + searchRange);
+                args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
+                args[a] = max(args[a], LOWER_BOUNDS[a]);
             }
         }
 
