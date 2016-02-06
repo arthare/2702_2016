@@ -14,6 +14,7 @@ using namespace cv;
 using namespace std;
 
 Mat templ;
+Mat templFlip;
 void drawCircle (Mat& img, Mat& result, Point matchLoc)
 {
         circle(result, matchLoc, 20, Scalar(0, 255, 255));
@@ -64,12 +65,56 @@ void dumptuff ()
     cout << "CV_64FC3 "<< CV_64FC3<<endl;
     cout << "CV_64FC4 "<< CV_64FC4<<endl;
 }
-pos temple(Mat original, int* args)
+
+
+ pos getMatch(Mat edgeImage, Mat templ, int match_method)
+ {
+        Mat result;
+    int result_cols =  edgeImage.cols - templ.cols + 1;
+    int result_rows = edgeImage.rows - templ.rows + 1;
+
+    result.create( result_rows, result_cols, CV_32FC1 );
+    matchTemplate( edgeImage, templ, result, match_method );
+
+    //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
+
+    /// Localizing the best match with minMaxLoc
+    double minVal; double maxVal; Point minLoc; Point maxLoc;
+    Point matchLoc;
+
+
+    minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
+
+    /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
+    if( match_method  == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED )
+    {
+        matchLoc = minLoc;
+    }
+    else
+    {
+        matchLoc = maxLoc;
+    }
+
+    pos temp;
+
+
+    temp.x = matchLoc.x + templ.cols /2;
+    temp.y = matchLoc.y + templ.rows /2;
+
+    temp.minVal = minVal;
+    temp.maxVal = maxVal;
+
+    return temp;
+ }
+
+ pos temple(Mat original, int* args)
 {
     if(templ.empty())
     {
         templ = imread( "../opencv_lib/template.png",CV_LOAD_IMAGE_GRAYSCALE );
         //cout<<"Templ type: "<< templL.type()<<endl;
+        templFlip = templ.clone();
+        flip(templFlip, templ, 1);
         //cout<<"Templ depth"<< templL.depth()<<endl;
     }
 
@@ -118,61 +163,13 @@ pos temple(Mat original, int* args)
     {
         Canny(channels[1], edgeDetect, 3*110, 3*113);
     }
-    //cout<<"img type: "<< edgeDetect.type()<<endl;
-    //cout<<"img depth"<< edgeDetect.depth()<<endl;
 
-    Mat result;
-    int result_cols =  edgeDetect.cols - templ.cols + 1;
-    int result_rows = edgeDetect.rows - templ.rows + 1;
-
-    result.create( result_rows, result_cols, CV_32FC1 );
-    matchTemplate( edgeDetect, templ, result, match_method );
-    //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
-
-    /// Localizing the best match with minMaxLoc
-    double minVal; double maxVal; Point minLoc; Point maxLoc;
-    Point matchLoc;
-
-
-    minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
-
-    /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
-    if( match_method  == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED )
-    {
-        matchLoc = minLoc;
-    }
-    else
-    {
-        matchLoc = maxLoc;
-    }
-
-    if(args)
-    {
-        /*Mat resultDraw = original.clone();
-        Mat imgDraw = edgeDetect.clone();
-
-        templL.copyTo(imgDraw.rowRange(matchLocL.y, matchLocL.y + templL.rows).colRange(matchLocL.x, matchLocL.x + templL.cols));
-        drawCircle(imgDraw, resultDraw, matchLocL);*/
-    }
-
-    pos temp;
-
-    /*if (minValL > 6870000)
-    {
-        temp.x = -1;
-        temp.y = -1;
-    }
-    else*/
-    {
-        temp.x = matchLoc.x + templ.cols /2;
-        temp.y = matchLoc.y + templ.rows /2;
-    }
-    temp.minVal = minVal;
-    temp.maxVal = maxVal;
-
-    //cout << temp.x << "," <<temp.y << endl;
-    //cout << (int)result.at<uchar>(temp.x,temp.y) << "," << (long)minVal << "," << (long)maxVal << endl;
-    return temp;
+    pos normal = getMatch(edgeDetect, templ, match_method);
+    pos flipped = getMatch(edgeDetect, templFlip, match_method);
+    pos ret;
+    ret.x = (normal.x + flipped.x) / 2;
+    ret.y = (normal.y + flipped.y) / 2;
+    return ret;
 }
 
 pos process(Mat img, int* args)
