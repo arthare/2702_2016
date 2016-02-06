@@ -1,0 +1,5 @@
+../testdata/images/auto-166.png
+89
+7
+128
+36

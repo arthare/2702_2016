@@ -30,6 +30,14 @@ void filterOutCrap(vector<string>& crapFiles)
 
 int runOnce(int* args);
 
+int randomNumber(int minNum, int maxNum)
+{
+    int result = (rand() % (maxNum - minNum +1)) + (minNum);
+
+    return result;
+}
+
+
 int main()
 {
     cout<<"Here's the test with default (on-robot) args"<<endl;
@@ -41,6 +49,7 @@ int main()
     int besty = 0;
     int bestz = 0;
     int store = 0;
+    int searchRange = 45;
 
     int tries = 0;
 
@@ -49,9 +58,19 @@ int main()
         cout.setstate(std::ios_base::badbit);
 
         int args[3] = {0};
-        args[1] = rand() % 41 + 90;
-        args[2] = rand() % 41 + 90;
-        args[3] = rand() % 35 + 20;
+
+        if(tries % 2)
+        {
+            args[1] = randomNumber(0,255);
+            args[2] = randomNumber(0,255);
+            args[3] = randomNumber(0,255);
+        }
+        else
+        {
+            args[1] = randomNumber(bestx - searchRange, bestx + searchRange);
+            args[2] = randomNumber(besty - searchRange, besty + searchRange);
+            args[3] = randomNumber(bestz - searchRange, bestz + searchRange);
+        }
 
         int thisTry = runOnce(args);
         cout.clear();
@@ -66,7 +85,7 @@ int main()
             besty = args[2];
             bestz = args[3];
             store = thisTry;
-            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << endl;
+            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << " " << tries % 2 << endl;
         }
     }
 }
