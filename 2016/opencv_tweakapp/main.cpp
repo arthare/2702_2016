@@ -40,7 +40,7 @@ int main()
     namedWindow("window2");
     namedWindow("window3");
 
-    const int NUM_ARGS = 5;
+    const int NUM_ARGS = 7;
     int args[NUM_ARGS] = {0};
 
     for(int x = 0; x < NUM_ARGS; x++)
