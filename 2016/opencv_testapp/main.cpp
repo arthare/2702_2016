@@ -30,6 +30,14 @@ void filterOutCrap(vector<string>& crapFiles)
 
 int runOnce(int* args);
 
+int randomNumber(int minNum, int maxNum)
+{
+    int result = (rand() % (maxNum - minNum +1)) + (minNum);
+
+    return result;
+}
+
+
 int main()
 {
     cout<<"Here's the test with default (on-robot) args"<<endl;
@@ -41,6 +49,7 @@ int main()
     int besty = 0;
     int bestz = 0;
     int store = 0;
+    int searchRange = 45;
 
     int tries = 0;
 
@@ -49,9 +58,19 @@ int main()
         cout.setstate(std::ios_base::badbit);
 
         int args[3] = {0};
-        args[1] = rand() % 41 + 90;
-        args[2] = rand() % 41 + 90;
-        args[3] = rand() % 35 + 20;
+
+        if(tries % 2)
+        {
+            args[1] = randomNumber(0,255);
+            args[2] = randomNumber(0,255);
+            args[3] = randomNumber(0,255);
+        }
+        else
+        {
+            args[1] = randomNumber(bestx - searchRange, bestx + searchRange);
+            args[2] = randomNumber(besty - searchRange, besty + searchRange);
+            args[3] = randomNumber(bestz - searchRange, bestz + searchRange);
+        }
 
         int thisTry = runOnce(args);
         cout.clear();
@@ -66,41 +85,17 @@ int main()
             besty = args[2];
             bestz = args[3];
             store = thisTry;
-            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << endl;
+            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << " " << tries % 2 << endl;
         }
     }
 }
 
-
-int runOnce(int* args)
+void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, int&therePasses)
 {
-    vector<string> testFiles;
-    getdir("../testdata/", testFiles);
-    filterOutCrap(testFiles);
-    int totalTime = 0;
-
-    int therePasses = 0;
-    int thereTotal = 0;
-
-    int notTherePasses = 0;
-    int notThereTotal = 0;
-    //int notThere = 0;
-
-    long minValThere = 0;
-    long minValNotThere = 0;
-
-    int widthSum = 0;
-    int heightSum = 0;
-
-    namedWindow("window");
-
-    for(unsigned int x=0; x < testFiles.size(); x++)
-    {
-        const string& strTxt = testFiles[x];
-        string imgFile;
+ string imgFile;
 
         ifstream in;
-        in.open(strTxt.c_str());
+        in.open(File.c_str());
 
         in>>imgFile;
 
@@ -109,8 +104,10 @@ int runOnce(int* args)
         {
           cout<<"NOT FOUND"<<endl;
         }
+
         else
         {
+
             int left;
             int right;
             int top;
@@ -119,6 +116,15 @@ int runOnce(int* args)
             in>> top;
             in>> right;
             in>> bottom;
+
+            if (shouldFlip)
+            {
+            Mat dst;
+            flip(img ,dst ,1 );
+            img=dst;
+            left=160-right;
+            right=160-left;
+            }
 
             int before = getms();
             pos pt = process(img, args);
@@ -174,6 +180,35 @@ int runOnce(int* args)
             }
 
         }
+}
+int runOnce(int* args)
+{
+    vector<string> testFiles;
+    getdir("../testdata/", testFiles);
+    filterOutCrap(testFiles);
+    int totalTime = 0;
+
+    int therePasses = 0;
+    int thereTotal = 0;
+
+    int notTherePasses = 0;
+    int notThereTotal = 0;
+    //int notThere = 0;
+
+    long minValThere = 0;
+    long minValNotThere = 0;
+
+    int widthSum = 0;
+    int heightSum = 0;
+
+    namedWindow("window");
+
+    for(unsigned int x=0; x < testFiles.size(); x++)
+    {
+
+        const string& strTxt = testFiles[x];
+        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
+        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
 
     }
     cout << therePasses << " of " << thereTotal << endl;
