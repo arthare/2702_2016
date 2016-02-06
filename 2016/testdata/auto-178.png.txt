@@ -1,0 +1,5 @@
+../testdata/images/auto-178.png
+113
+6
+153
+28

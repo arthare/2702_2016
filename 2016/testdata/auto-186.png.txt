@@ -1,0 +1,5 @@
+../testdata/images/auto-186.png
+49
+1
+96
+18
