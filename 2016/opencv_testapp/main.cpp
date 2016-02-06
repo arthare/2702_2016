@@ -39,28 +39,34 @@ int main()
 
     int bestx = 0;
     int besty = 0;
+    int bestz = 0;
     int store = 0;
 
+    int tries = 0;
 
-    for(int x = 0; x < 255; x += 4)
+    while(true)
     {
-        for(int y = 0; y < 255; y += 4)
+        cout.setstate(std::ios_base::badbit);
+
+        int args[3] = {0};
+        args[1] = rand() % 255;
+        args[2] = rand() % 255;
+        args[3] = rand() % 80 + 20;
+
+        int thisTry = runOnce(args);
+        cout.clear();
+        tries++;
+        if(tries % 10000 == 0)
         {
-            cout.setstate(std::ios_base::badbit);
-
-            int args[3] = {0};
-            args[1] = x;
-            args[2] = y;
-
-            int thisTry = runOnce(args);
-            cout.clear();
-            if(thisTry > store)
-            {
-                bestx = x;
-                besty = y;
-                store = thisTry;
-                cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty << endl;
-            }
+            cout<<"Tries: "<<tries<<endl;
+        }
+        if(thisTry > store)
+        {
+            bestx = args[1];
+            besty = args[2];
+            bestz = args[3];
+            store = thisTry;
+            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << endl;
         }
     }
 }

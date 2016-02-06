@@ -87,15 +87,36 @@ pos temple(Mat original, int* args)
     Mat channels[3];
     split(original, channels);
 
+    {
+        const float stdDevGoal = args ? args[3] : 46.0f;
+        Mat& green = channels[1];
+        Scalar mean;
+        Scalar stddev;
+        meanStdDev(green, mean, stddev);
+        for(int y=0; y < green.cols; y++)
+        {
+            for(int x=0; x < green.rows; x++)
+            {
+                uchar& px = green.at<uchar>(x,y);
+                px = saturate_cast<uchar>(128-mean[0]+px);
+                px = saturate_cast<uchar>((px-128)*(stdDevGoal/stddev[0])+128);
+
+
+            }
+        }
+
+        imshow("window2", green);
+    }
+
     Mat edgeDetect;
     if(args)
     {
         Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
-        //imshow("window2", edgeDetect);
+        imshow("window3", edgeDetect);
     }
     else
     {
-        Canny(channels[1], edgeDetect, 156, 384);
+        Canny(channels[1], edgeDetect, 3*113, 3*67);
     }
     //cout<<"img type: "<< edgeDetect.type()<<endl;
     //cout<<"img depth"<< edgeDetect.depth()<<endl;

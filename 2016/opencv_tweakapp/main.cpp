@@ -79,7 +79,7 @@ int main()
         }
 
         process(img, args);
-
+        imshow("window", img);
         waitKey(30);
     }
 }
