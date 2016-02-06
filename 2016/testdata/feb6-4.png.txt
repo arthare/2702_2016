@@ -1,0 +1,5 @@
+../testdata/images/feb6-4.png
+41
+30
+95
+63

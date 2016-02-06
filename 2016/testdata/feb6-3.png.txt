@@ -1,0 +1,5 @@
+../testdata/images/feb6-3.png
+78
+32
+130
+53

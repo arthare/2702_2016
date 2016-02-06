@@ -1,0 +1,5 @@
+../testdata/images/feb6-25.png
+97
+52
+149
+75

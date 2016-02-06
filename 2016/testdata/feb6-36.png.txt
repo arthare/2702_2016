@@ -1,0 +1,5 @@
+../testdata/images/feb6-36.png
+67
+50
+116
+73

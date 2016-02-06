@@ -1,0 +1,5 @@
+../testdata/images/feb6-15.png
+95
+22
+146
+49

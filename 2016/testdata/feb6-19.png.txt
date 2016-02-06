@@ -1,0 +1,5 @@
+../testdata/images/feb6-19.png
+85
+34
+132
+64

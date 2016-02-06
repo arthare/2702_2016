@@ -1,0 +1,5 @@
+../testdata/images/feb6-34.png
+62
+49
+114
+75

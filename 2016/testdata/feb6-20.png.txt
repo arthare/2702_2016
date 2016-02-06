@@ -1,0 +1,5 @@
+../testdata/images/feb6-20.png
+77
+39
+131
+64

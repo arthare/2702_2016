@@ -1,0 +1,5 @@
+../testdata/images/feb6-13.png
+83
+20
+134
+49

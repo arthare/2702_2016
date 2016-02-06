@@ -1,0 +1,5 @@
+../testdata/images/feb6-8.png
+61
+29
+114
+61
