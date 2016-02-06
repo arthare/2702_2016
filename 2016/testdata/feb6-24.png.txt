@@ -1,5 +1,0 @@
-../testdata/images/feb6-24.png
-101
-53
-146
-74
