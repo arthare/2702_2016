@@ -9,6 +9,8 @@
 
 #include <sys/stat.h>
 
+
+
 using namespace cv;
 
 using namespace std;
@@ -154,18 +156,24 @@ void dumptuff ()
     }
 
     Mat edgeDetect;
+    Mat edgeDetect2;
     if(args)
     {
         Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
-        imshow("window3", edgeDetect);
+        Canny(channels[1], edgeDetect2, 3*args[4], 3*args[5], 3);
+
     }
     else
     {
         Canny(channels[1], edgeDetect, 3*110, 3*113);
+        Canny(channels[1], edgeDetect2, 3*110, 3*113);
     }
 
-    pos normal = getMatch(edgeDetect, templ, match_method);
-    pos flipped = getMatch(edgeDetect, templFlip, match_method);
+    Mat edgeDetectBlend;
+    addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
+    imshow("window3", edgeDetectBlend);
+    pos normal = getMatch(edgeDetectBlend, templ, match_method);
+    pos flipped = getMatch(edgeDetectBlend, templFlip, match_method);
     pos ret;
     ret.x = (normal.x + flipped.x) / 2;
     ret.y = (normal.y + flipped.y) / 2;
