@@ -157,21 +157,21 @@ void dumptuff ()
 
     Mat edgeDetect;
     Mat edgeDetect2;
+    Mat edgeDetectBlend;
     if(args)
     {
         Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
         Canny(channels[1], edgeDetect2, 3*args[4], 3*args[5], 3);
-
+        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
+        imshow("window3", edgeDetectBlend);
     }
     else
     {
         Canny(channels[1], edgeDetect, 3*110, 3*113);
         Canny(channels[1], edgeDetect2, 3*110, 3*113);
+        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
     }
 
-    Mat edgeDetectBlend;
-    addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
-    imshow("window3", edgeDetectBlend);
     pos normal = getMatch(edgeDetectBlend, templ, match_method);
     pos flipped = getMatch(edgeDetectBlend, templFlip, match_method);
     pos ret;

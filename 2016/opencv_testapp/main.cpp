@@ -45,33 +45,55 @@ int main()
     cout<<"^^^^^^^^^^"<<endl;
     cout<<"Above: the results for on-robot args"<<endl;
 
-    int bestx = 0;
-    int besty = 0;
-    int bestz = 0;
+    const int WILD_GUESS_FREQUENCY = 2;
+    const int ARGS_TO_OPTIMIZE = 6;
+    int best[ARGS_TO_OPTIMIZE] = {0};
     int store = 0;
-    int searchRange = 45;
+    int searchRange = 35;
+
+    const int LOWER_BOUNDS[] = {
+        0,
+        0, // edge1.1
+        0, // edge1.2
+        30, // stddev stretch
+        0, // edge2.1
+        0, // edge2.2
+    };
+    const int UPPER_BOUNDS[] = {
+        255,
+        255, // edge1.1
+        255, // edge1.2
+        45, // stddev stretch
+        255, // edge2.1
+        255, // edge2.2
+    };
 
     int tries = 0;
 
     while(true)
     {
-        cout.setstate(std::ios_base::badbit);
 
-        int args[3] = {0};
+        int args[ARGS_TO_OPTIMIZE] = {0};
 
-        if(tries % 2)
+        const bool isWildGuess = tries % WILD_GUESS_FREQUENCY == 0;
+        if(isWildGuess)
         {
-            args[1] = randomNumber(0,255);
-            args[2] = randomNumber(0,255);
-            args[3] = randomNumber(0,255);
+            // if odd, make random guess
+            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+            {
+                args[a] = randomNumber(LOWER_BOUNDS[a],UPPER_BOUNDS[a]);
+            }
         }
         else
         {
-            args[1] = randomNumber(bestx - searchRange, bestx + searchRange);
-            args[2] = randomNumber(besty - searchRange, besty + searchRange);
-            args[3] = randomNumber(bestz - searchRange, bestz + searchRange);
+            // if even, make guess close to our best so far
+            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+            {
+                args[a] = randomNumber(best[a] - searchRange, best[a] + searchRange);
+            }
         }
 
+        cout.setstate(std::ios_base::badbit);
         int thisTry = runOnce(args);
         cout.clear();
         tries++;
@@ -81,11 +103,20 @@ int main()
         }
         if(thisTry > store)
         {
-            bestx = args[1];
-            besty = args[2];
-            bestz = args[3];
+            // we got a personal best!
+            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+            {
+                // remember the arguments we used to achieve this
+                best[a]=args[a];
+            }
             store = thisTry;
-            cout<<"This is the new best " << store <<" best x " << bestx <<" best y "<< besty<<" best z "<< bestz << " " << tries % 2 << endl;
+            cout<<"This is the new best " << store;
+            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+            {
+                // spit out current bests
+                cout <<" best[" << a << "]: " << best[a] << " ";
+            }
+            cout << " Wild? "<< isWildGuess<<endl;
         }
     }
 }
