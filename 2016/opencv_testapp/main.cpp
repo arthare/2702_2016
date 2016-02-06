@@ -71,36 +71,12 @@ int main()
     }
 }
 
-
-int runOnce(int* args)
+void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, int&therePasses)
 {
-    vector<string> testFiles;
-    getdir("../testdata/", testFiles);
-    filterOutCrap(testFiles);
-    int totalTime = 0;
-
-    int therePasses = 0;
-    int thereTotal = 0;
-
-    int notTherePasses = 0;
-    int notThereTotal = 0;
-    //int notThere = 0;
-
-    long minValThere = 0;
-    long minValNotThere = 0;
-
-    int widthSum = 0;
-    int heightSum = 0;
-
-    namedWindow("window");
-
-    for(unsigned int x=0; x < testFiles.size(); x++)
-    {
-        const string& strTxt = testFiles[x];
-        string imgFile;
+ string imgFile;
 
         ifstream in;
-        in.open(strTxt.c_str());
+        in.open(File.c_str());
 
         in>>imgFile;
 
@@ -109,8 +85,10 @@ int runOnce(int* args)
         {
           cout<<"NOT FOUND"<<endl;
         }
+
         else
         {
+
             int left;
             int right;
             int top;
@@ -119,6 +97,15 @@ int runOnce(int* args)
             in>> top;
             in>> right;
             in>> bottom;
+
+            if (shouldFlip)
+            {
+            Mat dst;
+            flip(img ,dst ,1 );
+            img=dst;
+            left=160-right;
+            right=160-left;
+            }
 
             int before = getms();
             pos pt = process(img, args);
@@ -174,6 +161,35 @@ int runOnce(int* args)
             }
 
         }
+}
+int runOnce(int* args)
+{
+    vector<string> testFiles;
+    getdir("../testdata/", testFiles);
+    filterOutCrap(testFiles);
+    int totalTime = 0;
+
+    int therePasses = 0;
+    int thereTotal = 0;
+
+    int notTherePasses = 0;
+    int notThereTotal = 0;
+    //int notThere = 0;
+
+    long minValThere = 0;
+    long minValNotThere = 0;
+
+    int widthSum = 0;
+    int heightSum = 0;
+
+    namedWindow("window");
+
+    for(unsigned int x=0; x < testFiles.size(); x++)
+    {
+
+        const string& strTxt = testFiles[x];
+        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
+        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
 
     }
     cout << therePasses << " of " << thereTotal << endl;
