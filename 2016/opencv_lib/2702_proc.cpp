@@ -79,7 +79,7 @@ void dumptuff ()
     int result_rows = edgeImage.rows - templ.rows + 1;
 
     result.create( result_rows, result_cols, CV_32FC1 );
-    matchTemplate( edgeImage, templ, result, match_method );
+    matchTemplate( edgeImage, templ, result, match_method, templ );
 
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
@@ -188,11 +188,11 @@ pos temple(Mat original, int* args)
     // args[3]: stddev goal
     // args[4]: template scale
     // args[5]: template thickness
-    const int kernelSize = args ? args[0] : 3;
-    const int edgeDetect1 = args ? args[1] : 95;
-    const int edgeDetect2 = args ? args[2] : 125;
-    const float stdDevGoal = args ? args[3] : 43;
-    const int templPixelsPerInch = (float)(args ? args[4] : 17)/10.0f;
+    const int kernelSize = args ? args[0] : 1;
+    const int edgeDetect1 = args ? args[1] : 64;
+    const int edgeDetect2 = args ? args[2] : 99;
+    const float stdDevGoal = args ? args[3] : 37;
+    const int templPixelsPerInch = (float)(args ? args[4] : 20)/10.0f;
     const int templLineThickness = args ? args[5] : 2;
     int edgeDetect3 = ((args ? args[6] : 1) * 2) + 1;
     edgeDetect3 = max(3, edgeDetect3);

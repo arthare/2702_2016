@@ -28,7 +28,7 @@ void filterOutCrap(vector<string>& crapFiles)
 }
 
 
-int runOnce(int* args);
+float runOnce(int* args);
 
 int randomNumber(int minNum, int maxNum)
 {
@@ -48,8 +48,8 @@ int main()
     const int WILD_GUESS_FREQUENCY = 2;
     const int ARGS_TO_OPTIMIZE = 7;
     const int searchRange = 0.35; // percentage of the entire bounds of a given thingy
-    int best[ARGS_TO_OPTIMIZE] = {3,95, 125, 43, 17, 2, 1};
-    int store = 214;
+    int best[ARGS_TO_OPTIMIZE] = {3,106, 94, 35, 24, 2, 1};
+    float bestScoreYet = 1e30f;
 
 
     const int LOWER_BOUNDS[] = {
@@ -109,7 +109,7 @@ int main()
         {
             cout<<"Tries: "<<tries<<endl;
         }
-        if(thisTry > store)
+        if(thisTry < bestScoreYet)
         {
             // we got a personal best!
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
@@ -117,8 +117,8 @@ int main()
                 // remember the arguments we used to achieve this
                 best[a]=args[a];
             }
-            store = thisTry;
-            cout<<"This is the new best " << store;
+            bestScoreYet = thisTry;
+            cout<<"This is the new best " << bestScoreYet;
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
                 // spit out current bests
@@ -129,105 +129,82 @@ int main()
     }
 }
 
-void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, int&therePasses)
+void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, float&scoreTotal, int& therePassCount)
 {
- string imgFile;
+    string imgFile;
 
-        ifstream in;
-        in.open(File.c_str());
+    ifstream in;
+    in.open(File.c_str());
 
-        in>>imgFile;
+    in>>imgFile;
 
-        Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
-        if(img.empty())
+    Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+    if(img.empty())
+    {
+      cout<<"NOT FOUND"<<endl;
+    }
+
+    else
+    {
+        int left;
+        int right;
+        int top;
+        int bottom;
+        in>> left;
+        in>> top;
+        in>> right;
+        in>> bottom;
+
+        if (shouldFlip)
         {
-          cout<<"NOT FOUND"<<endl;
-        }
-
-        else
-        {
-
-            int left;
-            int right;
-            int top;
-            int bottom;
-            in>> left;
-            in>> top;
-            in>> right;
-            in>> bottom;
-
-            if (shouldFlip)
-            {
             Mat dst;
             flip(img ,dst ,1 );
             img=dst;
             left=160-right;
             right=160-left;
-            }
-
-            int before = getms();
-            pos pt = process(img, args);
-           int after = getms();
-           int time = after - before;
-           totalTime +=time;
-            if (left < 0)
-            {
-                minValNotThere += pt.minVal;
-                // the txt file said the target isn't there.  let's see how they guessed
-                if(pt.x == -1 && pt.y == -1)
-                {
-                    // they correctly guessed that it isn't there
-                    //cout<<"PASSED"<< " (: not there)" <<endl;
-                    notTherePasses ++;
-
-                }
-                else
-                {
-                    // they guessed it was there, but it's not!
-                    cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minVal<<endl;
-                }
-                notThereTotal++;
-            }
-            else
-            {
-                widthSum += right - left;
-                heightSum += bottom - top;
-                minValThere += pt.minVal;
-                // left >= 0, that means the target IS present
-                if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
-                {
-                    //cout<<"PASSED"<<endl;
-                    therePasses ++;
-
-                }
-                else
-                {
-                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minVal<<endl;
-                    {
-                        // draw the image and where they said the target was
-                       /*Mat show = img.clone();
-                       circle(show,Point(pt.x, pt.y) , 20, Scalar(255, 0, 0));
-                       circle(show,Point(pt.x, pt.y) , 3, Scalar(0, 0, 255));
-                       cout << left << "," << top << "," << right << "," << bottom << endl;
-                       cout << pt.x << "," << pt.y << endl;
-                       rectangle(show, Point(left,top), Point(right,bottom), Scalar(255,255,255));
-                       imshow("window", show);*/
-                       //waitKey(0);
-                    }
-                }
-                thereTotal++;
-            }
-
         }
+
+        const Point ptCenter((left+right)/2, (top+bottom)/2);
+
+
+        const int beforeProcess = getms();
+        pos pt = process(img, args);
+        const int afterProcess = getms();
+        const int timeForProcess = afterProcess - beforeProcess;
+        totalTime += timeForProcess;
+        if (left < 0)
+        {
+            // don't even care...
+        }
+        else
+        {
+            widthSum += right - left;
+            heightSum += bottom - top;
+            minValThere += pt.minVal;
+
+            if(pt.x >= left && pt.x <= right && pt.y >= top && pt.y <= bottom)
+            {
+                therePassCount++;
+            }
+            Point ptDistance(pt.x - ptCenter.x, pt.y - ptCenter.y);
+
+            // note that we leave the dist squared so that our score is affect more by bad misses
+            const double dist = ptDistance.x*ptDistance.x + ptDistance.y*ptDistance.y;
+            scoreTotal += dist;
+
+            thereTotal++;
+        }
+
+    }
 }
-int runOnce(int* args)
+float runOnce(int* args)
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
     filterOutCrap(testFiles);
     int totalTime = 0;
 
-    int therePasses = 0;
+    float scoreTotal = 0;
     int thereTotal = 0;
 
     int notTherePasses = 0;
@@ -240,25 +217,24 @@ int runOnce(int* args)
     int widthSum = 0;
     int heightSum = 0;
 
+    int therePassCount = 0;
+
     namedWindow("window");
 
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
 
         const string& strTxt = testFiles[x];
-        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
-        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
+        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,scoreTotal, therePassCount );
+        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,scoreTotal, therePassCount );
 
     }
-    cout << therePasses << " of " << thereTotal << endl;
+    cout << scoreTotal << " of " << thereTotal << endl;
+    cout << therePassCount <<" passes for 'there' images"<<endl;
     cout << "Total time = "<< totalTime << endl;
     cout << "Average time = " << totalTime / testFiles.size() << endl;
-    cout << "Target Not Present : " << notTherePasses <<  " of " << notThereTotal << endl;
-    cout << "average minval there : " << minValThere / thereTotal << endl;
-    cout << "average minval not there : " << minValNotThere / notThereTotal << endl;
-    cout << "average minval : " << (minValThere / thereTotal + minValNotThere / notThereTotal) / 2 << endl;
     cout << "avg heights "<<(heightSum / thereTotal)<<endl;
     cout << "avg widths "<<(widthSum / thereTotal)<<endl;
 
-    return therePasses;
+    return scoreTotal;
 }
