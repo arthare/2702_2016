@@ -46,26 +46,29 @@ int main()
     cout<<"Above: the results for on-robot args"<<endl;
 
     const int WILD_GUESS_FREQUENCY = 2;
-    const int ARGS_TO_OPTIMIZE = 6;
-    int best[ARGS_TO_OPTIMIZE] = {0};
-    int store = 0;
-    int searchRange = 35;
+    const int ARGS_TO_OPTIMIZE = 7;
+    const int searchRange = 0.35; // percentage of the entire bounds of a given thingy
+    int best[ARGS_TO_OPTIMIZE] = {3,95, 125, 43, 17, 2, 1};
+    int store = 214;
+
 
     const int LOWER_BOUNDS[] = {
         0,
         0, // edge1.1
         0, // edge1.2
         30, // stddev stretch
-        0, // edge2.1
-        0, // edge2.2
+        10, // template scale
+        1, // template thickness
+        0, // edge 1.3 (aperture)
     };
     const int UPPER_BOUNDS[] = {
-        1,
+        7,
         255, // edge1.1
         255, // edge1.2
         45, // stddev stretch
-        255, // edge2.1
-        255, // edge2.2
+        40, // edge2.1
+        3, // edge2.2
+        3, // edge 1.3
     };
 
     int tries = 0;
@@ -91,7 +94,8 @@ int main()
             // if even, make guess close to our best so far
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
-                args[a] = randomNumber(best[a] - searchRange, best[a] + searchRange);
+                const int bounceSize = (UPPER_BOUNDS[a] - LOWER_BOUNDS[a]) * searchRange;
+                args[a] = randomNumber(best[a] - bounceSize, best[a] + bounceSize);
                 args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
                 args[a] = max(args[a], LOWER_BOUNDS[a]);
             }

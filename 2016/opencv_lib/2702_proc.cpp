@@ -17,6 +17,9 @@ using namespace std;
 
 Mat templ;
 Mat templFlip;
+float setupTemplPixelsPerInch=-1;
+int setupLineThickness = -1;
+
 void drawCircle (Mat& img, Mat& result, Point matchLoc)
 {
         circle(result, matchLoc, 20, Scalar(0, 255, 255));
@@ -109,33 +112,102 @@ void dumptuff ()
     return temp;
  }
 
- pos temple(Mat original, int* args)
+Mat convolveKernel;
+int setupKernelSize = 0;
+void setupKernel(int size)
 {
-    if(templ.empty())
+    size = max(1, size);
+    if(convolveKernel.empty() || setupKernelSize != size)
     {
-        templ = imread( "../opencv_lib/template.png",CV_LOAD_IMAGE_GRAYSCALE );
-        //cout<<"Templ type: "<< templL.type()<<endl;
-        templFlip = templ.clone();
-        flip(templFlip, templ, 1);
-        //cout<<"Templ depth"<< templL.depth()<<endl;
+        convolveKernel = Mat::zeros( size, size, CV_32F );
+
+        for(int x = 0;x < size; x++)
+        {
+            convolveKernel.at<float>(x, size/2) = 1;
+            convolveKernel.at<float>(size/2, x) = 1;
+        }
+        setupKernelSize = size;
     }
+}
+void setupTemplate(float templPixelsPerInch, const int lineThickness)
+{
+    templPixelsPerInch = max(templPixelsPerInch, 1.0f);
+    templPixelsPerInch = min(templPixelsPerInch, 3.0f);
+    if(templ.empty() || setupTemplPixelsPerInch != templPixelsPerInch || setupLineThickness != lineThickness)
+    {
+        setupLineThickness = lineThickness;
+        setupTemplPixelsPerInch = templPixelsPerInch;
+
+        const float flRealWidthIn = 20;
+        const float flRealHeightIn = 12;
+        const float flRealThicknessIn = 2.0;
+
+        templ = Mat::zeros(flRealHeightIn * templPixelsPerInch, flRealWidthIn * templPixelsPerInch,  CV_8UC1);
+
+        Point ptTopRight(flRealWidthIn - flRealThicknessIn/2, 0);
+        Point ptBotRight(flRealWidthIn - flRealThicknessIn/2, flRealHeightIn - flRealThicknessIn/2);
+        Point ptBotLeft(0, flRealHeightIn - flRealThicknessIn/2);
+        Point ptTopLeft(0,0);
+        Point ptInnerTopLeft(flRealThicknessIn, 0);
+        Point ptLeftArmpit(flRealThicknessIn, flRealHeightIn - flRealThicknessIn*1.5);
+        Point ptRightArmpit(flRealWidthIn - flRealThicknessIn*1.5f, flRealHeightIn - flRealThicknessIn*1.5);
+        Point ptInnerTopRight(flRealWidthIn - flRealThicknessIn*1.5f, 0);
+
+        Point* rgPointOrder[] = {
+            &ptTopRight,
+            &ptBotRight,
+            &ptBotLeft,
+            &ptTopLeft,
+            &ptInnerTopLeft,
+            &ptLeftArmpit,
+            &ptRightArmpit,
+            &ptInnerTopRight,
+        };
+        const int NUM_POINTS = sizeof(rgPointOrder) / sizeof(rgPointOrder[0]);
+        for(int x = 0;x < NUM_POINTS; x++)
+        {
+            // gotta scale the points
+            Point pt = *rgPointOrder[x];
+            Point pt2 = *rgPointOrder[(x+1) % NUM_POINTS];
+            pt.x *= templPixelsPerInch;
+            pt.y *= templPixelsPerInch;
+            pt2.x *= templPixelsPerInch;
+            pt2.y *= templPixelsPerInch;
+
+            line(templ, pt, pt2, Scalar(255,255,255), lineThickness);
+        }
+
+        flip(templ, templFlip, 1);
+    }
+}
+pos temple(Mat original, int* args)
+{
+    // args[0]: size of kernel
+    // args[1]: edgedetect param 1
+    // args[2]: edgedetect param 2
+    // args[3]: stddev goal
+    // args[4]: template scale
+    // args[5]: template thickness
+    const int kernelSize = args ? args[0] : 3;
+    const int edgeDetect1 = args ? args[1] : 95;
+    const int edgeDetect2 = args ? args[2] : 125;
+    const float stdDevGoal = args ? args[3] : 43;
+    const int templPixelsPerInch = (float)(args ? args[4] : 17)/10.0f;
+    const int templLineThickness = args ? args[5] : 2;
+    int edgeDetect3 = ((args ? args[6] : 1) * 2) + 1;
+    edgeDetect3 = max(3, edgeDetect3);
+    edgeDetect3 = min(7, edgeDetect3);
+
+    setupTemplate(templPixelsPerInch, templLineThickness);
+    setupKernel(kernelSize);
 
     /// Do the Matching and Normalize
-    int match_method = args ? args[0] : 0;
-    if (match_method <=  CV_TM_SQDIFF)
-    {
-        match_method = CV_TM_SQDIFF;
-    }
-    else if(match_method >= CV_TM_CCOEFF_NORMED)
-    {
-        match_method = CV_TM_CCOEFF_NORMED;
-    }
+    const int match_method = CV_TM_SQDIFF;
 
     Mat channels[3];
     split(original, channels);
 
     {
-        const float stdDevGoal = args ? args[3] : 34.0f;
         Mat& green = channels[1];
         Scalar mean;
         Scalar stddev;
@@ -144,36 +216,42 @@ void dumptuff ()
         {
             for(int x=0; x < green.rows; x++)
             {
-                uchar& px = green.at<uchar>(x,y);
-                px = saturate_cast<uchar>(128-mean[0]+px);
-                px = saturate_cast<uchar>((px-128)*(stdDevGoal/stddev[0])+128);
+                uchar& g = green.at<uchar>(x,y);
 
+                g = saturate_cast<uchar>(128-mean[0]+g);
+                g = saturate_cast<uchar>((g-128)*(stdDevGoal/stddev[0])+128);
 
             }
         }
 
-        imshow("window2", green);
+        if(args)
+        {
+            imshow("window2", green);
+        }
     }
 
     Mat edgeDetect;
-    Mat edgeDetect2;
-    Mat edgeDetectBlend;
-    if(args)
+    Canny(channels[1], edgeDetect, 3*edgeDetect1, 3*edgeDetect2, edgeDetect3);
+
+    Mat thickEdges;
+    if(kernelSize > 1)
     {
-        Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
-        Canny(channels[1], edgeDetect2, 3*args[4], 3*args[5], 3);
-        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
-        imshow("window3", edgeDetectBlend);
+        filter2D(edgeDetect, thickEdges, -1, convolveKernel, Point(-1,-1), 0, BORDER_DEFAULT);
     }
     else
     {
-        Canny(channels[1], edgeDetect, 3*110, 3*113);
-        Canny(channels[1], edgeDetect2, 3*110, 3*113);
-        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
+        thickEdges = edgeDetect;
     }
 
-    pos normal = getMatch(edgeDetectBlend, templ, match_method);
-    pos flipped = getMatch(edgeDetectBlend, templFlip, match_method);
+    if(args)
+    {
+        imshow("window3", edgeDetect);
+        imshow("window4", templ);
+    }
+
+
+    pos normal = getMatch(thickEdges, templ, match_method);
+    pos flipped = getMatch(thickEdges, templFlip, match_method);
     pos ret;
     ret.x = (normal.x + flipped.x) / 2;
     ret.y = (normal.y + flipped.y) / 2;
