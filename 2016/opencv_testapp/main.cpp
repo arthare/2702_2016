@@ -10,7 +10,11 @@
 using namespace std;
 using namespace cv;
 
-
+struct runOnceResult
+{
+    int passCount;
+    int totalError;
+};
 
 void filterOutCrap(vector<string>& crapFiles)
 {
@@ -27,7 +31,7 @@ void filterOutCrap(vector<string>& crapFiles)
 }
 
 
-int runOnce(int* args);
+runOnceResult runOnce(int* args);
 
 int randomNumber(int minNum, int maxNum)
 {
@@ -47,7 +51,7 @@ int main()
     const int WILD_GUESS_FREQUENCY = 2;
     const int ARGS_TO_OPTIMIZE = 6;
     int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97};
-    int store = 0;
+    int bestScore = 0x7fffffff;
     int searchRange = 35;
 
     const int LOWER_BOUNDS[] = {
@@ -97,14 +101,14 @@ int main()
         }
 
         cout.setstate(std::ios_base::badbit);
-        int thisTry = runOnce(args);
+        runOnceResult thisTry = runOnce(args);
         cout.clear();
         tries++;
         if(tries % 10000 == 0)
         {
             cout<<"Tries: "<<tries<<endl;
         }
-        if(thisTry > store)
+        if(thisTry.totalError < bestScore)
         {
             // we got a personal best!
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
@@ -112,8 +116,8 @@ int main()
                 // remember the arguments we used to achieve this
                 best[a]=args[a];
             }
-            store = thisTry;
-            cout<<"This is the new best " << store;
+            bestScore = thisTry.totalError;
+            cout<<"Best error:" << bestScore << " images:" << thisTry.passCount;
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
                 // spit out current bests
@@ -124,7 +128,7 @@ int main()
     }
 }
 
-void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, int&therePasses)
+void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int&minValNotThere, int&notTherePasses, int&notThereTotal, int&widthSum, int&heightSum, long int&minValThere, int&thereTotal, int&therePasses, int&sumError)
 {
  string imgFile;
 
@@ -185,6 +189,11 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
             }
             else
             {
+                int centerX=(left+right)/2;
+                int centerY=(top+bottom)/2;
+                int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
+
+                sumError=sumError+error;
                 widthSum += right - left;
                 heightSum += bottom - top;
                 minValThere += pt.minVal;
@@ -215,7 +224,7 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
 
         }
 }
-int runOnce(int* args)
+runOnceResult runOnce(int* args)
 {
     vector<string> testFiles;
     getdir("../testdata/", testFiles);
@@ -235,14 +244,16 @@ int runOnce(int* args)
     int widthSum = 0;
     int heightSum = 0;
 
+    int sumError = 0;
+
     namedWindow("window");
 
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
 
         const string& strTxt = testFiles[x];
-        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
-        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses );
+        RunOneFile (strTxt ,false ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses, sumError );
+        RunOneFile (strTxt ,true ,args ,totalTime ,minValNotThere ,notTherePasses ,notThereTotal ,widthSum ,heightSum ,minValThere ,thereTotal ,therePasses, sumError );
 
     }
     cout << therePasses << " of " << thereTotal << endl;
@@ -254,7 +265,10 @@ int runOnce(int* args)
     cout << "average minval : " << (minValThere / thereTotal + minValNotThere / notThereTotal) / 2 << endl;
     cout << "avg heights "<<(heightSum / thereTotal)<<endl;
     cout << "avg widths "<<(widthSum / thereTotal)<<endl;
-
-    return therePasses;
+    cout << "total errors"<< sumError <<endl;
+    runOnceResult ret;
+    ret.passCount=therePasses;
+    ret.totalError=sumError;
+    return ret;
 }
 
