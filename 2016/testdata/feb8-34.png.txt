@@ -1,0 +1,5 @@
+../testdata/images/feb8-34.png
+89
+70
+114
+83

@@ -1,5 +1,5 @@
 ../testdata/images/auto-52.png
-82
-18
-123
-50
+92
+29
+112
+43

@@ -1,5 +1,5 @@
 ../testdata/images/auto-148.png
-52
-68
-95
-100
+56
+76
+88
+93

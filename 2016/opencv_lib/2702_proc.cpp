@@ -111,6 +111,13 @@ void dumptuff ()
 
  pos temple(Mat original, int* args)
 {
+    int match_method = args ? args[0] : 2;
+    const int edgeDetectParam1 = args ? args[1] : 125;
+    const int edgeDetectParam2 = args ? args[2] : 121;
+    const float stdDevGoal = args ? args[3] : 37;
+    const int edgeDetectParam3 = args ? args[4] : 171;
+    const int edgeDetectParam4 = args ? args[5] : 97;
+
     if(templ.empty())
     {
         templ = imread( "../opencv_lib/template.png",CV_LOAD_IMAGE_GRAYSCALE );
@@ -121,7 +128,6 @@ void dumptuff ()
     }
 
     /// Do the Matching and Normalize
-    int match_method = args ? args[0] : 0;
     if (match_method <=  CV_TM_SQDIFF)
     {
         match_method = CV_TM_SQDIFF;
@@ -135,7 +141,6 @@ void dumptuff ()
     split(original, channels);
 
     {
-        const float stdDevGoal = args ? args[3] : 34.0f;
         Mat& green = channels[1];
         Scalar mean;
         Scalar stddev;
@@ -158,18 +163,12 @@ void dumptuff ()
     Mat edgeDetect;
     Mat edgeDetect2;
     Mat edgeDetectBlend;
+    Canny(channels[1], edgeDetect, 3*edgeDetectParam1, 3*edgeDetectParam2, 3);
+    Canny(channels[1], edgeDetect2, 3*edgeDetectParam3, 3*edgeDetectParam4, 3);
+    addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
     if(args)
     {
-        Canny(channels[1], edgeDetect, 3*args[1], 3*args[2], 3);
-        Canny(channels[1], edgeDetect2, 3*args[4], 3*args[5], 3);
-        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
         imshow("window3", edgeDetectBlend);
-    }
-    else
-    {
-        Canny(channels[1], edgeDetect, 3*110, 3*113);
-        Canny(channels[1], edgeDetect2, 3*110, 3*113);
-        addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
     }
 
     pos normal = getMatch(edgeDetectBlend, templ, match_method);

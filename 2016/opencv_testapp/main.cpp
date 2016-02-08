@@ -1,6 +1,5 @@
 #include <iostream>
 #include "2702_proc.h"
-
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -47,7 +46,7 @@ int main()
 
     const int WILD_GUESS_FREQUENCY = 2;
     const int ARGS_TO_OPTIMIZE = 6;
-    int best[ARGS_TO_OPTIMIZE] = {0};
+    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97};
     int store = 0;
     int searchRange = 35;
 
@@ -55,12 +54,12 @@ int main()
         0,
         0, // edge1.1
         0, // edge1.2
-        30, // stddev stretch
+        20, // stddev stretch
         0, // edge2.1
         0, // edge2.2
     };
     const int UPPER_BOUNDS[] = {
-        1,
+        6,
         255, // edge1.1
         255, // edge1.2
         45, // stddev stretch
@@ -258,3 +257,4 @@ int runOnce(int* args)
 
     return therePasses;
 }
+

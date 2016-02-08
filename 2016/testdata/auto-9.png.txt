@@ -1,5 +1,5 @@
 ../testdata/images/auto-9.png
-36
-82
-80
-119
+49
+92
+63
+109

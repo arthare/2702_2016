@@ -1,5 +1,5 @@
 ../testdata/images/auto-45.png
-80
-21
-123
-48
+92
+28
+108
+37

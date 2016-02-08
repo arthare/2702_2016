@@ -1,0 +1,5 @@
+../testdata/images/feb8-6.png
+88
+68
+101
+82
