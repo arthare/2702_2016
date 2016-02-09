@@ -155,10 +155,8 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     const int edgeDetectParam1 = args ? args[1] : 125;
     const int edgeDetectParam2 = args ? args[2] : 121;
     const float stdDevGoal = args ? args[3] : 37;
-    const int edgeDetectParam3 = args ? args[4] : 171;
-    const int edgeDetectParam4 = args ? args[5] : 97;
-    const float templatePixelsPerInch = (args ? args[6] : 25)/10.0f;
-    const int templateLineThickness = args ? args[7] : 1;
+    const float templatePixelsPerInch = (args ? args[4] : 25)/10.0f;
+    const int templateLineThickness = args ? args[5] : 1;
 
     setupTemplate(templatePixelsPerInch, templateLineThickness);
     /// Do the Matching and Normalize
@@ -195,18 +193,14 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     }
 
     Mat edgeDetect;
-    Mat edgeDetect2;
-    Mat edgeDetectBlend;
     Canny(channels[1], edgeDetect, 3*edgeDetectParam1, 3*edgeDetectParam2, 3);
-    Canny(channels[1], edgeDetect2, 3*edgeDetectParam3, 3*edgeDetectParam4, 3);
-    addWeighted(edgeDetect, 0.5, edgeDetect2, 0.5, 0, edgeDetectBlend);
     if(args)
     {
-        imshow("window3", edgeDetectBlend);
+        imshow("window3", edgeDetect);
     }
 
-    pos normal = getMatch(edgeDetectBlend, templ, match_method);
-    pos flipped = getMatch(edgeDetectBlend, templFlip, match_method);
+    pos normal = getMatch(edgeDetect, templ, match_method);
+    pos flipped = getMatch(edgeDetect, templFlip, match_method);
     pos ret;
     ret.x = (normal.x + flipped.x) / 2;
     ret.y = (normal.y + flipped.y) / 2;
@@ -258,7 +252,7 @@ pos hsvFilter(Mat& rawImage, pos guessCenter)
 pos process(Mat img, int* args)
 {
     pos templResult = temple(img, args);
-    //hsvFilter(img, templResult);
+    //                              hsvFilter(img, templResult);
     return templResult;
 }
 
