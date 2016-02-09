@@ -49,8 +49,8 @@ int main()
     cout<<"Above: the results for on-robot args"<<endl;
 
     const int WILD_GUESS_FREQUENCY = 2;
-    const int ARGS_TO_OPTIMIZE = 8;
-    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97, 2.5, 1};
+    const int ARGS_TO_OPTIMIZE = 9;
+    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97, 3, 1, 175};
     int bestScore = 0x7fffffff;
     int searchRange = 35;
 
@@ -63,6 +63,7 @@ int main()
         0, // edge2.2
         15, // template pixels per inch
         1, // template line thickness
+        175 //brightest pixel we will keep
     };
     const int UPPER_BOUNDS[] = {
         6,
@@ -73,6 +74,7 @@ int main()
         255, // edge2.2
         40, //template pixels per inch
         5, //template line thickness
+        255 //brightest pixel we will keep
     };
 
     int tries = 0;
@@ -269,7 +271,7 @@ runOnceResult runOnce(int* args)
     cout << "average minval : " << (minValThere / thereTotal + minValNotThere / notThereTotal) / 2 << endl;
     cout << "avg heights "<<(heightSum / thereTotal)<<endl;
     cout << "avg widths "<<(widthSum / thereTotal)<<endl;
-    cout << "total errors"<< sumError <<endl;
+    cout << "total errors "<< sumError <<endl;
     runOnceResult ret;
     ret.passCount=therePasses;
     ret.totalError=sumError;
