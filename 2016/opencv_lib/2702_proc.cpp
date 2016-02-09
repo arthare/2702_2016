@@ -17,18 +17,8 @@ using namespace std;
 
 Mat templ;
 Mat templFlip;
-void drawCircle (Mat& img, Mat& result, Point matchLoc)
-{
-        circle(result, matchLoc, 20, Scalar(0, 255, 255));
-        circle(result, matchLoc, 19, Scalar(255, 255, 255));
-
-        imshow("window", result);
-
-        circle(img, matchLoc, 20, Scalar(0, 255, 255));
-        circle(img, matchLoc, 19, Scalar(255, 255, 255));
-
-        imshow("window2", img);
-}
+float setupTemplPixelsPerInch=-1;
+int setupLineThickness = -1;
 
 void dumptuff ()
 {
@@ -108,7 +98,57 @@ void dumptuff ()
 
     return temp;
  }
+void setupTemplate(float templPixelsPerInch, const int lineThickness)
+{
+    templPixelsPerInch = max(templPixelsPerInch, 1.0f);
+    templPixelsPerInch = min(templPixelsPerInch, 3.0f);
+    if(templ.empty() || setupTemplPixelsPerInch != templPixelsPerInch || setupLineThickness != lineThickness)
+    {
+        setupLineThickness = lineThickness;
+        setupTemplPixelsPerInch = templPixelsPerInch;
 
+        const float flRealWidthIn = 20;
+        const float flRealHeightIn = 12;
+        const float flRealThicknessIn = 2.0;
+
+        templ = Mat::zeros(flRealHeightIn * templPixelsPerInch, flRealWidthIn * templPixelsPerInch,  CV_8UC1);
+
+        Point ptTopRight(flRealWidthIn - flRealThicknessIn/2, 0);
+        Point ptBotRight(flRealWidthIn - flRealThicknessIn/2, flRealHeightIn - flRealThicknessIn/2);
+        Point ptBotLeft(0, flRealHeightIn - flRealThicknessIn/2);
+        Point ptTopLeft(0,0);
+        Point ptInnerTopLeft(flRealThicknessIn, 0);
+        Point ptLeftArmpit(flRealThicknessIn, flRealHeightIn - flRealThicknessIn*1.5);
+        Point ptRightArmpit(flRealWidthIn - flRealThicknessIn*1.5f, flRealHeightIn - flRealThicknessIn*1.5);
+        Point ptInnerTopRight(flRealWidthIn - flRealThicknessIn*1.5f, 0);
+
+        Point* rgPointOrder[] = {
+            &ptTopRight,
+            &ptBotRight,
+            &ptBotLeft,
+            &ptTopLeft,
+            &ptInnerTopLeft,
+            &ptLeftArmpit,
+            &ptRightArmpit,
+            &ptInnerTopRight,
+        };
+        const int NUM_POINTS = sizeof(rgPointOrder) / sizeof(rgPointOrder[0]);
+        for(int x = 0;x < NUM_POINTS; x++)
+        {
+            // gotta scale the points
+            Point pt = *rgPointOrder[x];
+            Point pt2 = *rgPointOrder[(x+1) % NUM_POINTS];
+            pt.x *= templPixelsPerInch;
+            pt.y *= templPixelsPerInch;
+            pt2.x *= templPixelsPerInch;
+            pt2.y *= templPixelsPerInch;
+
+            line(templ, pt, pt2, Scalar(255,255,255), lineThickness);
+        }
+
+        flip(templ, templFlip, 1);
+    }
+}
  pos temple(Mat original, int* args)
 {
     int match_method = args ? args[0] : 2;
@@ -117,16 +157,10 @@ void dumptuff ()
     const float stdDevGoal = args ? args[3] : 37;
     const int edgeDetectParam3 = args ? args[4] : 171;
     const int edgeDetectParam4 = args ? args[5] : 97;
+    const float templatePixelsPerInch = (args ? args[6] : 25)/10.0f;
+    const int templateLineThickness = args ? args[7] : 1;
 
-    if(templ.empty())
-    {
-        templ = imread( "../opencv_lib/template.png",CV_LOAD_IMAGE_GRAYSCALE );
-        //cout<<"Templ type: "<< templL.type()<<endl;
-        templFlip = templ.clone();
-        flip(templFlip, templ, 1);
-        //cout<<"Templ depth"<< templL.depth()<<endl;
-    }
-
+    setupTemplate(templatePixelsPerInch, templateLineThickness);
     /// Do the Matching and Normalize
     if (match_method <=  CV_TM_SQDIFF)
     {
@@ -179,9 +213,53 @@ void dumptuff ()
     return ret;
 }
 
+pos hsvFilter(Mat& rawImage, pos guessCenter)
+{
+    int boxWidth = 100;
+    int boxHeight = 100;
+
+    int x = guessCenter.x;
+    int y = guessCenter.y;
+
+    Mat hsvBig;
+    Mat hsvSmall;
+
+    cvtColor(rawImage, hsvBig, COLOR_BGR2HSV);
+
+    int cols = hsvBig.cols;
+    int rows = hsvBig.rows;
+
+    int boxx = x-(boxWidth/2);
+    int boxy = y-(boxHeight/2);
+
+    if(boxx + boxWidth > cols)
+    {
+        boxx -= (boxx + boxWidth) - cols;
+    }
+    if(boxy + boxHeight > rows)
+    {
+        boxy -= (boxy + boxHeight) - rows;
+    }
+    if (boxx < 0)
+    {
+        boxx = 0;
+    }
+    if (boxy < 0)
+    {
+        boxy = 0;
+    }
+
+    hsvSmall = hsvBig(Rect(boxx, boxy, boxWidth, boxHeight));
+
+    imshow("window2", hsvSmall);
+
+}
+
 pos process(Mat img, int* args)
 {
-    return temple(img, args);
+    pos templResult = temple(img, args);
+    //hsvFilter(img, templResult);
+    return templResult;
 }
 
 int getms (void)

@@ -49,8 +49,8 @@ int main()
     cout<<"Above: the results for on-robot args"<<endl;
 
     const int WILD_GUESS_FREQUENCY = 2;
-    const int ARGS_TO_OPTIMIZE = 6;
-    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97};
+    const int ARGS_TO_OPTIMIZE = 8;
+    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 171, 97, 2.5, 1};
     int bestScore = 0x7fffffff;
     int searchRange = 35;
 
@@ -58,17 +58,21 @@ int main()
         0,
         0, // edge1.1
         0, // edge1.2
-        20, // stddev stretch
+        35, // stddev stretch
         0, // edge2.1
         0, // edge2.2
+        15, // template pixels per inch
+        1, // template line thickness
     };
     const int UPPER_BOUNDS[] = {
         6,
         255, // edge1.1
         255, // edge1.2
-        45, // stddev stretch
+        36, // stddev stretch
         255, // edge2.1
         255, // edge2.2
+        40, //template pixels per inch
+        5, //template line thickness
     };
 
     int tries = 0;
