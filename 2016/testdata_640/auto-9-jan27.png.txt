@@ -1,5 +1,0 @@
-../testdata/images/auto-9-jan27.png
-193
-21
-343
-145

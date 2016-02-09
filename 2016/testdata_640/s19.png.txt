@@ -1,5 +1,0 @@
-../testdata/images/s19.png
-311
-53
-402
-136

@@ -1,5 +1,0 @@
-../testdata/images/s17.png
-254
-51
-341
-139

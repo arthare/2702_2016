@@ -1,5 +1,5 @@
 ../testdata/images/auto-44.png
-91
-27
-108
-40
+30
+56
+44
+62

@@ -1,5 +1,5 @@
 ../testdata/images/auto-74.png
-74
-35
-97
+33
+63
 47
+74

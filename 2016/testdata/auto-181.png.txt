@@ -1,5 +1,5 @@
 ../testdata/images/auto-181.png
-47
-8
+22
+58
+40
 69
-20

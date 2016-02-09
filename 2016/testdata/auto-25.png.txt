@@ -1,5 +1,0 @@
-../testdata/images/auto-25.png
-55
-58
-68
-73

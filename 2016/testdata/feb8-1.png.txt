@@ -1,5 +1,0 @@
-../testdata/images/feb8-1.png
-88
-66
-104
-82
