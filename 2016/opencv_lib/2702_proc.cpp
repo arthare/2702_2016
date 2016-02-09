@@ -17,6 +17,7 @@ using namespace std;
 
 Mat templ;
 Mat templFlip;
+
 float setupTemplPixelsPerInch=-1;
 int setupLineThickness = -1;
 
@@ -59,16 +60,31 @@ void dumptuff ()
 }
 
 
- pos getMatch(Mat edgeImage, Mat templ, int match_method)
+ pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue)
  {
-        Mat result;
+    Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
 
-    result.create( result_rows, result_cols, CV_32FC1 );
-    matchTemplate( edgeImage, templ, result, match_method );
+    result.create(result_rows, result_cols, CV_32FC1 );
+    matchTemplate(edgeImage, templ, result, match_method );
 
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
+
+    Mat pixelsWeLike;
+    Mat pixelsWeLikeforResult;
+
+    inRange(normalImage, Scalar(0,0,0), Scalar(tooBrightPixelValue,255,tooBrightPixelValue), pixelsWeLike);
+
+
+    pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
+    //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
+    imshow("window2", pixelsWeLikeforResult);
+    //cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
+
+    multiply(pixelsWeLikeforResult, result, result,1,CV_32FC1);
+
+    //bitwise_not (pixelsWeHate, pixelsWeHate);
 
     /// Localizing the best match with minMaxLoc
     double minVal; double maxVal; Point minLoc; Point maxLoc;
@@ -157,6 +173,7 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     const float stdDevGoal = args ? args[3] : 37;
     const float templatePixelsPerInch = (args ? args[4] : 25)/10.0f;
     const int templateLineThickness = args ? args[5] : 1;
+    const int tooBrightPixelValues = args ? args[6] : 175;
 
     setupTemplate(templatePixelsPerInch, templateLineThickness);
     /// Do the Matching and Normalize
@@ -189,7 +206,7 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
             }
         }
 
-        imshow("window2", green);
+        //imshow("window2", green);
     }
 
     Mat edgeDetect;
@@ -199,8 +216,9 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
         imshow("window3", edgeDetect);
     }
 
-    pos normal = getMatch(edgeDetect, templ, match_method);
-    pos flipped = getMatch(edgeDetect, templFlip, match_method);
+    pos normal = getMatch(edgeDetect, templ, match_method, original, tooBrightPixelValues);
+    pos flipped = getMatch(edgeDetect, templFlip, match_method, original, tooBrightPixelValues);
+
     pos ret;
     ret.x = (normal.x + flipped.x) / 2;
     ret.y = (normal.y + flipped.y) / 2;
@@ -245,7 +263,7 @@ pos hsvFilter(Mat& rawImage, pos guessCenter)
 
     hsvSmall = hsvBig(Rect(boxx, boxy, boxWidth, boxHeight));
 
-    imshow("window2", hsvSmall);
+    //imshow("window2", hsvSmall);
 
 }
 

@@ -10,7 +10,7 @@
 using namespace std;
 using namespace cv;
 
-#define SCALE_FACTOR 2
+//#define SCALE_FACTOR 2
 
 
 
@@ -40,7 +40,7 @@ int main()
     namedWindow("window2");
     namedWindow("window3");
 
-    const int NUM_ARGS = 7;
+    const int NUM_ARGS = 15;
     int args[NUM_ARGS] = {0};
 
     for(int x = 0; x < NUM_ARGS; x++)
@@ -66,10 +66,7 @@ int main()
             in.open(strTxt.c_str());
             in>>imgFile;
             cout<<"which leads us to imgfile = "<<imgFile<<endl;
-            Mat tempFile;
-            tempFile = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
-
-            resize(tempFile, img, Size(640 / SCALE_FACTOR,480 / SCALE_FACTOR));
+            img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
             if(img.empty())
             {
               cout<<"Image "<<imgFile<<" was empty"<<endl;
