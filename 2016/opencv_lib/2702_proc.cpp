@@ -78,7 +78,9 @@ void dumptuff ()
 
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
+    //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
     imshow("window2", pixelsWeLikeforResult);
+    //cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
 
     multiply(pixelsWeLikeforResult, result, result,1,CV_32FC1);
 
@@ -206,7 +208,7 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
             }
         }
 
-        imshow("window2", green);
+        //imshow("window2", green);
     }
 
     Mat edgeDetect;
@@ -266,7 +268,7 @@ pos hsvFilter(Mat& rawImage, pos guessCenter)
 
     hsvSmall = hsvBig(Rect(boxx, boxy, boxWidth, boxHeight));
 
-    imshow("window2", hsvSmall);
+    //imshow("window2", hsvSmall);
 
 }
 
