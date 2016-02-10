@@ -40,20 +40,76 @@ int randomNumber(int minNum, int maxNum)
     return result;
 }
 
+void reportABestTry(const runOnceResult& result, int* args, int cArgs, const char* who)
+{
+    cout<<who<<": Best error:" << result.totalError << " images:" << result.passCount;
+    for(int a=0; a < cArgs; a=a+1)
+    {
+        // spit out current bests
+        cout <<" best[" << a << "]: " << args[a] << " ";
+    }
+    cout<<endl;
+}
+void tuneArgs(int* args, const int cArgs, const bool* DIFFERENTIABLE, const int* LOWER_BOUNDS, const int* UPPER_BOUNDS, runOnceResult& thisTry)
+{
+    const int veryFirstError = thisTry.totalError;
+
+    bool stillFindingImprovements = true;
+    while(stillFindingImprovements)
+    {
+        cout<<"Starting hillclimb cycle, looking to improve on "<<veryFirstError<<endl;
+
+        stillFindingImprovements = false; // assume we won't find any improvements on this cycle
+        for(int ixArg = 0; ixArg < cArgs; ixArg++)
+        {
+            if(!DIFFERENTIABLE[ixArg]) continue;
+
+            const int modSpan = 5;
+            const int modStep = 2;
+            const int initialValue = args[ixArg];
+            int bestValueForThisArg = initialValue;
+            int bestTotalError = thisTry.totalError;
+            for(int mod = max(LOWER_BOUNDS[ixArg], initialValue-modSpan); mod <= min(UPPER_BOUNDS[ixArg]-1, initialValue+modSpan); mod+=modStep)
+            {
+                args[ixArg] = mod;
+                args[ixArg] = min(args[ixArg], UPPER_BOUNDS[ixArg] - 1);
+                args[ixArg] = max(args[ixArg], LOWER_BOUNDS[ixArg]);
+                cout.setstate(std::ios_base::badbit);
+                runOnceResult modTry = runOnce(args);
+                cout.clear();
+
+                if(modTry.totalError < bestTotalError)
+                {
+                    cout<<"Hillclimber improved from "<<veryFirstError<<" to "<<modTry.totalError<<endl;
+                    bestValueForThisArg = mod; // just use this one now
+                    bestTotalError = modTry.totalError;
+                    thisTry = modTry;
+                    stillFindingImprovements = true; // we found improvements!
+
+
+                    reportABestTry(thisTry, args, cArgs, "HillClimb");
+                }
+
+            }
+            args[ixArg] = bestValueForThisArg;
+        }
+    }
+
+
+}
+
 
 int main()
 {
     cout<<"Here's the test with default (on-robot) args"<<endl;
-    runOnce(0);
+    runOnceResult veryFirstTry = runOnce(0);
     cout<<"^^^^^^^^^^"<<endl;
     cout<<"Above: the results for on-robot args"<<endl;
-
-    const int WILD_GUESS_FREQUENCY = 2;
 
     const int ARGS_TO_OPTIMIZE = 7;
     int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 2.5, 1, 175};
 
-    int bestScore = 0x7fffffff;
+    int bestScore = veryFirstTry.totalError;
     int searchRange = 35;
 
     const int LOWER_BOUNDS[] = {
@@ -74,6 +130,15 @@ int main()
         5, //template line thickness
         255 //brightest pixel we will keep
     };
+    const bool DIFFERENTIABLE[] = {
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+    };
 
     int tries = 0;
 
@@ -82,31 +147,17 @@ int main()
 
         int args[ARGS_TO_OPTIMIZE] = {0};
 
-        const bool isWildGuess = tries % WILD_GUESS_FREQUENCY == 0;
-        if(isWildGuess)
+        for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
         {
-            // if odd, make random guess
-            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
-            {
-                args[a] = randomNumber(LOWER_BOUNDS[a],UPPER_BOUNDS[a]);
-                args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
-                args[a] = max(args[a], LOWER_BOUNDS[a]);
-            }
-        }
-        else
-        {
-            // if even, make guess close to our best so far
-            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
-            {
-                args[a] = randomNumber(best[a] - searchRange, best[a] + searchRange);
-                args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
-                args[a] = max(args[a], LOWER_BOUNDS[a]);
-            }
+            args[a] = randomNumber(LOWER_BOUNDS[a],UPPER_BOUNDS[a]);
+            args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
+            args[a] = max(args[a], LOWER_BOUNDS[a]);
         }
 
         cout.setstate(std::ios_base::badbit);
         runOnceResult thisTry = runOnce(args);
         cout.clear();
+
         tries++;
         if(tries % 10000 == 0)
         {
@@ -114,6 +165,7 @@ int main()
         }
         if(thisTry.totalError < bestScore)
         {
+            tuneArgs(args, ARGS_TO_OPTIMIZE, DIFFERENTIABLE, LOWER_BOUNDS, UPPER_BOUNDS, thisTry);
             // we got a personal best!
             for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
             {
@@ -121,13 +173,7 @@ int main()
                 best[a]=args[a];
             }
             bestScore = thisTry.totalError;
-            cout<<"Best error:" << bestScore << " images:" << thisTry.passCount;
-            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
-            {
-                // spit out current bests
-                cout <<" best[" << a << "]: " << best[a] << " ";
-            }
-            cout << " Wild? "<< isWildGuess<<endl;
+            reportABestTry(thisTry, best, ARGS_TO_OPTIMIZE, "Random");
         }
     }
 }
@@ -187,7 +233,7 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
                 else
                 {
                     // they guessed it was there, but it's not!
-                    cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minVal<<endl;
+                    //cout<<"FAILED for "<< imgFile <<" (: not there)" << "minVal " << pt.minVal<<endl;
                 }
                 notThereTotal++;
             }
