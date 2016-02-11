@@ -39,6 +39,7 @@ int main()
     namedWindow("window");
     namedWindow("window2");
     namedWindow("window3");
+    namedWindow("window4");
 
     const int NUM_ARGS = 15;
     int args[NUM_ARGS] = {0};
