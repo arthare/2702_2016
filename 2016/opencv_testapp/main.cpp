@@ -201,6 +201,7 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
                 widthSum += right - left;
                 heightSum += bottom - top;
                 minValThere += pt.minVal;
+                cout << "Error : "<< error << endl;
                 // left >= 0, that means the target IS present
                 if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
                 {

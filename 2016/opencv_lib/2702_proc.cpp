@@ -66,6 +66,8 @@ void dumptuff ()
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
 
+    cout << "result height : " <<result_rows << " result width : " << result_cols << endl;
+
     result.create(result_rows, result_cols, CV_32FC1 );
     matchTemplate(edgeImage, templ, result, match_method );
 
@@ -80,7 +82,7 @@ void dumptuff ()
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
     //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
     imshow("window2", pixelsWeLikeforResult);
-    //cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
+    // cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
 
     multiply(pixelsWeLikeforResult, result, result,1,CV_32FC1);
 
@@ -114,6 +116,13 @@ void dumptuff ()
 
     return temp;
  }
+
+void setupTemplatePNG()
+{
+    templ = imread("../opencv_lib/template.png", CV_LOAD_IMAGE_GRAYSCALE);
+    flip(templ, templFlip, 1);
+}
+
 void setupTemplate(float templPixelsPerInch, const int lineThickness)
 {
     templPixelsPerInch = max(templPixelsPerInch, 1.0f);
@@ -167,15 +176,16 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
 }
  pos temple(Mat original, int* args)
 {
-    int match_method = args ? args[0] : 2;
-    const int edgeDetectParam1 = args ? args[1] : 125;
-    const int edgeDetectParam2 = args ? args[2] : 121;
-    const float stdDevGoal = args ? args[3] : 37;
-    const float templatePixelsPerInch = (args ? args[4] : 25)/10.0f;
-    const int templateLineThickness = args ? args[5] : 1;
-    const int tooBrightPixelValues = args ? args[6] : 175;
+    int match_method = args ? args[0] : 5;
+    const int edgeDetectParam1 = args ? args[1] : 163;
+    const int edgeDetectParam2 = args ? args[2] : 111;
+    const float stdDevGoal = args ? args[3] : 35;
+    const float templatePixelsPerInch = (args ? args[4] : 11.2f)/10.0f;
+    const int templateLineThickness = args ? args[5] : 2;
+    const int tooBrightPixelValues = args ? args[6] : 183;
 
     setupTemplate(templatePixelsPerInch, templateLineThickness);
+    //setupTemplatePNG();
     /// Do the Matching and Normalize
     if (match_method <=  CV_TM_SQDIFF)
     {
@@ -263,7 +273,7 @@ pos hsvFilter(Mat& rawImage, pos guessCenter)
 
     hsvSmall = hsvBig(Rect(boxx, boxy, boxWidth, boxHeight));
 
-    //imshow("window2", hsvSmall);
+    imshow("window2", hsvSmall);
 
 }
 
