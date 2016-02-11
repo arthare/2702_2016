@@ -75,8 +75,15 @@ int main()
             ixLastImage = ixCurrentImage;
         }
 
-        process(img, args);
-        imshow("window", img);
+        pos processResult = process(img, args);
+
+        {
+            // now that we've processed, draw a circle on it
+            Mat whereAt = img.clone();
+            circle(whereAt, Point(processResult.x, processResult.y), 5, Scalar(255,255,255), 3);
+            imshow("window", whereAt);
+        }
+
         waitKey(30);
     }
 }

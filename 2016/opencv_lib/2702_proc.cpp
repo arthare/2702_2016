@@ -60,7 +60,7 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue)
+ pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue)
  {
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
@@ -74,7 +74,7 @@ void dumptuff ()
     Mat pixelsWeLike;
     Mat pixelsWeLikeforResult;
 
-    inRange(normalImage, Scalar(0,0,0), Scalar(tooBrightPixelValue,255,tooBrightPixelValue), pixelsWeLike);
+    inRange(normalImage, Scalar(tooDimPixelValue,tooDimPixelValue,tooDimPixelValue), Scalar(tooBrightPixelValue,255,tooBrightPixelValue), pixelsWeLike);
 
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
@@ -174,6 +174,7 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     const float templatePixelsPerInch = (args ? args[4] : 25)/10.0f;
     const int templateLineThickness = args ? args[5] : 1;
     const int tooBrightPixelValues = args ? args[6] : 175;
+    const int tooDimPixelValue = args ? args[7] : 0;
 
     setupTemplate(templatePixelsPerInch, templateLineThickness);
     /// Do the Matching and Normalize
@@ -216,13 +217,9 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
         imshow("window3", edgeDetect);
     }
 
-    pos normal = getMatch(edgeDetect, templ, match_method, original, tooBrightPixelValues);
-    pos flipped = getMatch(edgeDetect, templFlip, match_method, original, tooBrightPixelValues);
+    pos normal = getMatch(edgeDetect, templ, match_method, original, tooBrightPixelValues , tooDimPixelValue);
 
-    pos ret;
-    ret.x = (normal.x + flipped.x) / 2;
-    ret.y = (normal.y + flipped.y) / 2;
-    return ret;
+    return normal;
 }
 
 pos hsvFilter(Mat& rawImage, pos guessCenter)

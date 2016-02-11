@@ -50,8 +50,8 @@ int main()
 
     const int WILD_GUESS_FREQUENCY = 2;
 
-    const int ARGS_TO_OPTIMIZE = 7;
-    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 2.5, 1, 175};
+    const int ARGS_TO_OPTIMIZE = 8;
+    int best[ARGS_TO_OPTIMIZE] = {3, 30, 180, 35, 15, 3, 241, 45};
 
     int bestScore = 0x7fffffff;
     int searchRange = 35;
@@ -63,7 +63,8 @@ int main()
         35, // stddev stretch
         15, // template pixels per inch
         1, // template line thickness
-        175 //brightest pixel we will keep
+        150, //brightest pixel we will keep
+        0 // Dimest pixel we will keep
     };
     const int UPPER_BOUNDS[] = {
         6,
@@ -72,7 +73,8 @@ int main()
         36, // stddev stretch
         40, //template pixels per inch
         5, //template line thickness
-        255 //brightest pixel we will keep
+        255, //brightest pixel we will keep
+        50 // dimest pixel we will keep
     };
 
     int tries = 0;
