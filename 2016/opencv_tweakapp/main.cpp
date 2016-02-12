@@ -27,6 +27,15 @@ void filterOutCrap(vector<string>& crapFiles)
         }
     }
 }
+
+bool haveArgsChanged(const int* args, const int* lastArgs, const int cArgs)
+{
+    for(int x = 0;x < cArgs; x++)
+    {
+        if(args[x] != lastArgs[x]) return true;
+    }
+    return false;
+}
 int main()
 {
     vector<string> testFiles;
@@ -41,10 +50,11 @@ int main()
     namedWindow("window3");
     namedWindow("window4");
 
-    const int NUM_ARGS = 15;
-    int args[NUM_ARGS] = {0};
+    const int ARGS_TO_USE = ARG_COUNT+1;
+    int args[ARGS_TO_USE] = {0};
+    getDefaults(args);
 
-    for(int x = 0; x < NUM_ARGS; x++)
+    for(int x = 0; x < ARGS_TO_USE; x++)
     {
       char TrackbarName[50];
       sprintf( TrackbarName, "Arg %d", x );
@@ -54,9 +64,16 @@ int main()
 
     int ixLastImage = -1;
     Mat img;
+    pos lastProcessResult;
+    int lastArgs[ARGS_TO_USE];
+    int boxTop;
+    int boxLeft;
+    int boxRight;
+    int boxBottom;
+
     while(true)
     {
-        int ixCurrentImage = args[NUM_ARGS-1];
+        int ixCurrentImage = args[ARGS_TO_USE-1];
         ixCurrentImage = min((int)ixCurrentImage, (int)testFiles.size());
         if(ixCurrentImage != ixLastImage)
         {
@@ -66,6 +83,10 @@ int main()
             ifstream in;
             in.open(strTxt.c_str());
             in>>imgFile;
+            in>>boxLeft;
+            in>>boxTop;
+            in>>boxRight;
+            in>>boxBottom;
             cout<<"which leads us to imgfile = "<<imgFile<<endl;
             img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
             if(img.empty())
@@ -76,12 +97,20 @@ int main()
             ixLastImage = ixCurrentImage;
         }
 
-        pos processResult = process(img, args);
+
+        // only reprocess if args have changed
+        if(haveArgsChanged(args, lastArgs, ARGS_TO_USE))
+        {
+            lastProcessResult = process(img, args);
+
+            memcpy(lastArgs, args, sizeof(args));
+        }
 
         {
             // now that we've processed, draw a circle on it
             Mat whereAt = img.clone();
-            circle(whereAt, Point(processResult.x, processResult.y), 5, Scalar(255,255,255), 3);
+            circle(whereAt, Point(lastProcessResult.x, lastProcessResult.y), 5, Scalar(255,255,255), 3);
+            rectangle(whereAt, Point(boxLeft,boxTop), Point(boxRight,boxBottom),Scalar(255,255,255), 1);
             imshow("window", whereAt);
         }
 

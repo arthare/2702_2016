@@ -174,16 +174,31 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
         flip(templ, templFlip, 1);
     }
 }
- pos temple(Mat original, int* args)
+
+void getDefaults(int* args)
 {
-    int match_method = args ? args[0] : 5;
-    const int edgeDetectParam1 = args ? args[1] : 163;
-    const int edgeDetectParam2 = args ? args[2] : 111;
-    const float stdDevGoal = args ? args[3] : 35;
-    const float templatePixelsPerInch = (args ? args[4] : 11.2f)/10.0f;
-    const int templateLineThickness = args ? args[5] : 2;
-    const int tooBrightPixelValues = args ? args[6] : 183;
-    const int tooDimPixelValue = args ? args[7] : 0;
+    args[0] = 5;
+    args[1] = 163;
+    args[2] = 111;
+    args[3] = 35;
+    args[4] = 112;
+    args[5] = 2;
+    args[6] = 183;
+    args[7] = 0;
+}
+pos temple(Mat original, int* args)
+{
+    int defaults[ARG_COUNT];
+    getDefaults(defaults);
+
+    int match_method = args ? args[0] : defaults[0];
+    const int edgeDetectParam1 = args ? args[1] : defaults[1];
+    const int edgeDetectParam2 = args ? args[2] : defaults[2];
+    const float stdDevGoal = args ? args[3] : defaults[3];
+    const float templatePixelsPerInch = (args ? args[4] : defaults[4])/100.0f;
+    const int templateLineThickness = args ? args[5] : defaults[5];
+    const int tooBrightPixelValues = args ? args[6] : defaults[6];
+    const int tooDimPixelValue = args ? args[7] : defaults[7];
 
     setupTemplate(templatePixelsPerInch, templateLineThickness);
     //setupTemplatePNG();

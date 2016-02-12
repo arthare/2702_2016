@@ -106,8 +106,7 @@ int main()
     cout<<"^^^^^^^^^^"<<endl;
     cout<<"Above: the results for on-robot args"<<endl;
 
-    const int ARGS_TO_OPTIMIZE = 8;
-    int best[ARGS_TO_OPTIMIZE] = {2, 125, 121, 37, 2.5, 1, 175, 45};
+    int best[ARG_COUNT] = {2, 125, 121, 37, 2.5, 1, 175, 45};
 
     int bestScore = veryFirstTry.totalError;
     int searchRange = 35;
@@ -147,9 +146,9 @@ int main()
     while(true)
     {
 
-        int args[ARGS_TO_OPTIMIZE] = {0};
+        int args[ARG_COUNT] = {0};
 
-        for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+        for(int a=0; a < ARG_COUNT; a=a+1)
         {
             args[a] = randomNumber(LOWER_BOUNDS[a],UPPER_BOUNDS[a]);
             args[a] = min(args[a], UPPER_BOUNDS[a] - 1);
@@ -167,15 +166,15 @@ int main()
         }
         if(thisTry.totalError < bestScore)
         {
-            tuneArgs(args, ARGS_TO_OPTIMIZE, DIFFERENTIABLE, LOWER_BOUNDS, UPPER_BOUNDS, thisTry);
+            tuneArgs(args, ARG_COUNT, DIFFERENTIABLE, LOWER_BOUNDS, UPPER_BOUNDS, thisTry);
             // we got a personal best!
-            for(int a=0; a < ARGS_TO_OPTIMIZE; a=a+1)
+            for(int a=0; a < ARG_COUNT; a=a+1)
             {
                 // remember the arguments we used to achieve this
                 best[a]=args[a];
             }
             bestScore = thisTry.totalError;
-            reportABestTry(thisTry, best, ARGS_TO_OPTIMIZE, "Random");
+            reportABestTry(thisTry, best, ARG_COUNT, "Random");
         }
     }
 }
@@ -209,18 +208,18 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
 
             if (shouldFlip)
             {
-            Mat dst;
-            flip(img ,dst ,1 );
-            img=dst;
-            left=160-right;
-            right=160-left;
+                Mat dst;
+                flip(img ,dst ,1 );
+                img=dst;
+                left=160-right;
+                right=160-left;
             }
 
             int before = getms();
             pos pt = process(img, args);
-           int after = getms();
-           int time = after - before;
-           totalTime +=time;
+            int after = getms();
+            int time = after - before;
+            totalTime +=time;
             if (left < 0)
             {
                 minValNotThere += pt.minVal;
