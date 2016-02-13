@@ -12,66 +12,57 @@ struct pos {
 };
 
 struct settings{
+    static const int ARG_COUNT = 15;
     settings()
-        : match_method(5)
-        , edgeDetectParam1(163)
-        , edgeDetectParam2(111)
-        , stdDevGoal(35)
-        , templatePixelsPerInch(1.12f)
-        , templateLineThickness(2)
-        , tooBrightPixelValues(183)
-        , tooDimPixelValue(0)
-        , hMin(0)
-        , hMax(0)
-        , sMin(0)
-        , sMax(255)
-        , vMin(255)
-        , vMax(255)
-        , greenMultiplyer(25500)
     {
+        args[0] = 5;
+        args[1] = 163;
+        args[2] = 111;
+        args[3] = 35;
+        args[4] = 112;
+        args[5] = 2;
+        args[6] = 183;
+        args[7] = 0;
+        args[8] = 0;
+        args[9] = 0;
+        args[10] = 0;
+        args[11] = 255;
+        args[12] = 255;
+        args[13] = 255;
+        args[14] = 25500;
     }
 
     settings(int *args)
-        : match_method(args[0])
-        , edgeDetectParam1(args[1])
-        , edgeDetectParam2(args[2])
-        , stdDevGoal(args[3])
-        , templatePixelsPerInch(args[4]/100.f)
-        , templateLineThickness(args[5])
-        , tooBrightPixelValues(args[6])
-        , tooDimPixelValue(args[7])
-        , hMin(args[8])
-        , hMax(args[9])
-        , sMin(args[10])
-        , sMax(args[11])
-        , vMin(args[12])
-        , vMax(args[13])
-        , greenMultiplyer(args[14]*(2.0f/255.0f))
+    {
+        for(int i = 0;i < ARG_COUNT; ++i)
         {
+            this->args[i] = args[i];
         }
+    }
 
-    int match_method;
-    const int edgeDetectParam1;
-    const int edgeDetectParam2;
-    const float stdDevGoal;
-    const float templatePixelsPerInch;
-    const int templateLineThickness;
-    const int tooBrightPixelValues;
-    const int tooDimPixelValue;
-    const int hMin;
-    const int hMax;
-    const int sMin;
-    const int sMax;
-    const int vMin;
-    const int vMax;
-    const float greenMultiplyer;
+    int match_method(){return args[0];}
+    void set_match_method(int m){args[0] = m;}
+    const int edgeDetectParam1(){return args[1];}
+    const int edgeDetectParam2(){return args[2];}
+    const float stdDevGoal(){return args[3];}
+    const float templatePixelsPerInch(){return args[4];}
+    const int templateLineThickness(){return args[5];}
+    const int tooBrightPixelValues(){return args[6];}
+    const int tooDimPixelValue(){return args[7];}
+    const int hMin(){return args[8];}
+    const int hMax(){return args[9];}
+    const int sMin(){return args[10];}
+    const int sMax(){return args[11];}
+    const int vMin(){return args[12];}
+    const int vMax(){return args[13];}
+    const int greenMultiplyer(){return args[14]*(2.0f/255.0f);}
+
+    int args[ARG_COUNT];
+
 };
 
 
 pos process(cv::Mat, settings s);
-
-const int ARG_COUNT = 15;
-
 
 int getms (void);
 

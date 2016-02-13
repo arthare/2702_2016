@@ -212,13 +212,13 @@ pos temple(Mat original, settings& s)
     //setupTemplate(s.templatePixelsPerInch, s.templateLineThickness);
     setupTemplatePNG();
     /// Do the Matching and Normalize
-    if (s.match_method <=  CV_TM_SQDIFF)
+    if (s.match_method() <=  CV_TM_SQDIFF)
     {
-        s.match_method = CV_TM_SQDIFF;
+        s.set_match_method(CV_TM_SQDIFF);
     }
-    else if(s.match_method >= CV_TM_CCOEFF_NORMED)
+    else if(s.match_method() >= CV_TM_CCOEFF_NORMED)
     {
-        s.match_method = CV_TM_CCOEFF_NORMED;
+        s.set_match_method(CV_TM_CCOEFF_NORMED);
     }
 
     Mat channels[3];
@@ -235,7 +235,7 @@ pos temple(Mat original, settings& s)
             {
                 uchar& px = green.at<uchar>(x,y);
                 px = saturate_cast<uchar>(128-mean[0]+px);
-                px = saturate_cast<uchar>((px-128)*(s.stdDevGoal/stddev[0])+128);
+                px = saturate_cast<uchar>((px-128)*(s.stdDevGoal()/stddev[0])+128);
 
 
             }
@@ -250,7 +250,8 @@ pos temple(Mat original, settings& s)
 
     imshow("window3", edgeDetect);
 
-    pos normal = getMatch(edgeDetect, templ, s.match_method, original, s.tooBrightPixelValues, s.tooDimPixelValue, s.greenMultiplyer);
+    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue(), s.greenMultiplyer());
+
 
     return normal;
 }
@@ -259,7 +260,7 @@ pos hsvFilter(Mat& rawImage, settings s)
 {
     Mat hsvImage;
 
-    inRange(rawImage, Scalar(s.hMin,s.sMin,s.vMin), Scalar(s.hMax,s.sMax,s.vMax), hsvImage);
+    inRange(rawImage, Scalar(s.hMin(),s.sMin(),s.vMin()), Scalar(s.hMax(),s.sMax(),s.vMax()), hsvImage);
 
 }
 
