@@ -12,37 +12,35 @@ using namespace cv;
 
 //#define SCALE_FACTOR 2
 
-
-
-void filterOutCrap(vector<string>& crapFiles)
+vector<string> getListOfTestFiles()
 {
-    for(int x = 0; x < crapFiles.size(); x++ )
+    vector<string> allFiles;
+    getdir("../testdata/", allFiles);
+
+    vector<string> testFiles;
+    for(size_t i = 0; i < allFiles.size(); ++i )
     {
-        string file = crapFiles[x];
-        if(file.find(".txt") == string::npos)
+        const string& file = allFiles[i];
+        if(file.find(".txt") != string::npos)
         {
-            crapFiles[x] = crapFiles.back();
-            crapFiles.pop_back();
-            x--;
+            testFiles.push_back(file);
         }
     }
+    return testFiles;
 }
 
-bool haveArgsChanged(const int* args, const int* lastArgs, const int cArgs)
+bool haveSettingsChanged(const settings& orig_settings, const settings& last_settings)
 {
-    for(int x = 0;x < cArgs; x++)
+    for (int x = 0; x < settings::ARG_COUNT; ++x)
     {
-        if(args[x] != lastArgs[x]) return true;
+        if (orig_settings.args[x] != last_settings.args[x]) return true;
     }
     return false;
 }
+
 int main()
 {
-    vector<string> testFiles;
-    getdir("../testdata/", testFiles);
-
-
-    filterOutCrap(testFiles);
+    vector<string> testFiles = getListOfTestFiles();
 
     /// Create Windows
     namedWindow("window");
@@ -51,7 +49,7 @@ int main()
     namedWindow("window4");
     namedWindow("window5");
 
-    settings s;
+    settings s(WITH_UI);
 
     for(int x = 0; x < settings::ARG_COUNT; x++)
     {
@@ -66,7 +64,7 @@ int main()
     int ixLastImage = -1;
     Mat img;
     pos lastProcessResult;
-    settings lastArgs;
+    settings lastArgs(WITH_UI);
     int boxTop;
     int boxLeft;
     int boxRight;
@@ -105,18 +103,16 @@ int main()
             boxLeft=160-boxRightOld;*/
         }
 
-
         // only reprocess if args have changed
-        if(imageHasChanged || haveArgsChanged(s.args, lastArgs.args, settings::ARG_COUNT))
+        if (imageHasChanged || haveSettingsChanged(s, lastArgs))
         {
             lastProcessResult = process(img, s.args);
+            lastArgs.copyArgs(s.args);
 
-            memcpy(lastArgs.args, s.args, sizeof(s.args));
-
-            pos pt = process(img, s.args);
-            int centerX=(boxLeft+boxRight)/2;
-            int centerY=(boxTop+boxBottom)/2;
-            int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
+            const pos pt = process(img, s.args);
+            const int centerX = (boxLeft+boxRight) / 2;
+            const int centerY = (boxTop+boxBottom) / 2;
+            const int error = pow(centerX-pt.x, 2) + pow(centerY-pt.y, 2);
             cout << "Error : "<< error << endl;
 
         }

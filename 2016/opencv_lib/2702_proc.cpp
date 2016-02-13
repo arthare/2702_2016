@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 
 
-
 using namespace cv;
 
 using namespace std;
@@ -60,23 +59,25 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue)
- {
+pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Mat& normalImage)
+{
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
 
     result.create(result_rows, result_cols, CV_32FC1 );
-    matchTemplate(edgeImage, templ, result, match_method );
-    imshow("window5", edgeImage);
+    matchTemplate(edgeImage, templ, result, s.match_method() );
+    if (s.showUI) imshow("window5", edgeImage);
 
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
     Mat pixelsWeLike;
     Mat pixelsWeLikeforResult;
 
-    inRange(normalImage, Scalar(tooDimPixelValue,tooDimPixelValue,tooDimPixelValue), Scalar(tooBrightPixelValue,tooBrightPixelValue,tooBrightPixelValue), pixelsWeLike);
-
+    inRange(normalImage,
+            Scalar(s.tooDimPixelValue(), s.tooDimPixelValue(), s.tooDimPixelValue()),
+            Scalar(s.tooBrightPixelValue(), s.tooBrightPixelValue(), s.tooBrightPixelValue()),
+            pixelsWeLike);
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
     //Mat channels[3];
@@ -96,7 +97,7 @@ void dumptuff ()
     //}
 
     //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
-    imshow("window2", pixelsWeLikeforResult);
+    if (s.showUI) imshow("window2", pixelsWeLikeforResult);
     // cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
 
     multiply(pixelsWeLikeforResult, result, result,1,CV_32FC1);
@@ -111,7 +112,7 @@ void dumptuff ()
     minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 
     /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
-    if( match_method  == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED )
+    if (s.match_method() == CV_TM_SQDIFF || s.match_method() == CV_TM_SQDIFF_NORMED )
     {
         matchLoc = minLoc;
     }
@@ -202,7 +203,6 @@ void newEdgeDetect(InputArray img, OutputArray edges)
     }
     edgeKernel.at<float>(2,2)=12;
     filter2D(img,edges,-1,edgeKernel);
-
 }
 
 pos temple(Mat original, settings& s)
@@ -246,10 +246,9 @@ pos temple(Mat original, settings& s)
     //Canny(channels[1], edgeDetect, 3*s.edgeDetectParam1, 3*s.edgeDetectParam2, 3);
     newEdgeDetect(original,edgeDetect);
 
-    imshow("window3", edgeDetect);
+    if (s.showUI) imshow("window3", edgeDetect);
 
-    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue());
-
+    pos normal = getMatch(edgeDetect, templ, s, original);
 
     return normal;
 }
@@ -260,7 +259,7 @@ pos process(Mat img, settings s)
     return templResult;
 }
 
-int getms (void)
+int getms()
 {
     long            ms; // Milliseconds
     time_t          s;  // Seconds
@@ -273,6 +272,7 @@ int getms (void)
 
     return s * 1000 + ms;
 }
+
 int getdir (string dir, vector<string> &files)
 {
     DIR *dp;

@@ -3,13 +3,16 @@
 #include <vector>
 #include <opencv2/core/core.hpp>
 #include <iostream>
-//#include <opencv2/imgproc/imgproc.hpp>
+
 struct pos {
     int x;
     int y;
     long minVal;
     long maxVal;
 };
+
+static const bool NO_UI = false;
+static const bool WITH_UI = true;
 
 struct settings{
     enum ARG_TYPE
@@ -22,50 +25,50 @@ struct settings{
         ARG_COUNT,
     };
 
-    settings()
+    settings(bool showUI)
     {
         args[TEMPLATE_ALGO] = 5;
         args[STDDEV_STRETCH] = 27;
         args[TOOBRIGHT] = 194;
         args[TOODIM] = 16;
+        this->showUI = showUI;
     }
 
-    settings(int *args)
+    settings(int *args, bool showUI)
     {
         for(int i = 0;i < ARG_COUNT; ++i)
         {
             this->args[i] = args[i];
         }
+        this->showUI = showUI;
     }
 
     void report(std::ostream& os, const char* psz) const
     {
-        os<<psz<<std::endl;
+        os << psz << std::endl;
         for(int x = 0; x < ARG_COUNT; x++)
         {
-            os<<"args["<<x<<"] = "<<args[x]<<std::endl;
+            os << "args[" << x << "] = " << args[x] << std::endl;
         }
     }
 
+    void copyArgs(int *args)
+    {
+        memcpy(this->args, args, sizeof(this->args));
+    }
 
     int match_method() const { return args[TEMPLATE_ALGO];}
     void set_match_method(int m) {args[TEMPLATE_ALGO] = m;}
 
     const float stdDevGoal() const {return args[STDDEV_STRETCH];}
-    const int tooBrightPixelValues() const {return args[TOOBRIGHT];}
+    const int tooBrightPixelValue() const {return args[TOOBRIGHT];}
     const int tooDimPixelValue() const {return args[TOODIM];}
 
     int args[ARG_COUNT];
-
+    bool showUI;
 };
 
-
 pos process(cv::Mat, settings s);
-
-int getms (void);
-
+int getms();
 int getdir (std::string dir, std::vector<std::string> &files);
-
-bool fileExists (const std::string& name);
-
-
+bool fileExists(const std::string& name);
