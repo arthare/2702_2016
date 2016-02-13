@@ -266,6 +266,8 @@ pos hsvFilter(Mat& rawImage, settings s)
 
 pos process(Mat img, settings s)
 {
+    s.report(cout, "before process");
+
     pos templResult = temple(img, s);
     return templResult;
 }

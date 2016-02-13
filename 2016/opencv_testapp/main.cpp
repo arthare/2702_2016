@@ -104,6 +104,7 @@ int main()
     cout<<"Here's the test with default (on-robot) args"<<endl;
     settings default_settings;
     runOnceResult veryFirstTry = runOnce(default_settings);
+
     cout<<"^^^^^^^^^^"<<endl;
     cout<<"Above: the results for on-robot args"<<endl;
 
@@ -205,83 +206,69 @@ int main()
 
 void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, int&widthSum, int&heightSum, int&thereTotal, int&therePasses, int&sumError, ostream& os)
 {
- string imgFile;
+    string imgFile;
+    ifstream in;
+    in.open(File.c_str());
 
-        ifstream in;
-        in.open(File.c_str());
+    in>>imgFile;
 
-        in>>imgFile;
+    Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
+    if(img.empty())
+    {
+      cout<<"NOT FOUND"<<endl;
+    }
 
-        Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
-        if(img.empty())
+    else
+    {
+
+        int left;
+        int right;
+        int top;
+        int bottom;
+        in>> left;
+        in>> top;
+        in>> right;
+        in>> bottom;
+
+        if (shouldFlip)
         {
-          cout<<"NOT FOUND"<<endl;
+            int leftTemp = left;
+            Mat dst;
+            flip(img ,dst ,1 );
+            img=dst;
+            left=160-right;
+            right=160-leftTemp;
         }
 
-        else
+        int before = getms();
+
+        const settings s = args ? settings(args) : settings();
+        pos pt = process(img, s);
+        int after = getms();
+        int time = after - before;
+        totalTime +=time;
+
         {
+            int centerX=(left+right)/2;
+            int centerY=(top+bottom)/2;
+            int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
 
-            int left;
-            int right;
-            int top;
-            int bottom;
-            in>> left;
-            in>> top;
-            in>> right;
-            in>> bottom;
-
-            if (shouldFlip)
+            sumError=sumError+error;
+            widthSum += right - left;
+            heightSum += bottom - top;
+            os << "Error: " << error << " With File : " << imgFile << endl;
+            // left >= 0, that means the target IS present
+            if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
             {
-                Mat dst;
-                flip(img ,dst ,1 );
-                img=dst;
-                left=160-right;
-                right=160-left;
+                //cout<<"PASSED"<<endl;
+                therePasses ++;
+
             }
 
-            int before = getms();
-
-            const settings s = args ? settings(args) : settings();
-            pos pt = process(img, s);
-            int after = getms();
-            int time = after - before;
-            totalTime +=time;
-
-            {
-                int centerX=(left+right)/2;
-                int centerY=(top+bottom)/2;
-                int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
-
-                sumError=sumError+error;
-                widthSum += right - left;
-                heightSum += bottom - top;
-                os << "Error: " << error << " With File : " << imgFile << endl;
-                // left >= 0, that means the target IS present
-                if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
-                {
-                    //cout<<"PASSED"<<endl;
-                    therePasses ++;
-
-                }
-                else
-                {
-                    cout<<"FAILED for "<<imgFile<< "minVal " << pt.minVal<<endl;
-                    {
-                        // draw the image and where they said the target was
-                       /*Mat show = img.clone();
-                       circle(show,Point(pt.x, pt.y) , 20, Scalar(255, 0, 0));
-                       circle(show,Point(pt.x, pt.y) , 3, Scalar(0, 0, 255));
-                       cout << left << "," << top << "," << right << "," << bottom << endl;
-                       cout << pt.x << "," << pt.y << endl;
-                       rectangle(show, Point(left,top), Point(right,bottom), Scalar(255,255,255));
-                       imshow("window", show);*/
-                       //waitKey(0);
-                    }
-                }
-                thereTotal++;
-            }
-
+            thereTotal++;
         }
+
+    }
 }
 runOnceResult runOnce(settings &s)
 {
@@ -292,8 +279,6 @@ runOnceResult runOnce(settings &s)
 
     int therePasses = 0;
     int thereTotal = 0;
-
-    //int notThere = 0;
 
     int widthSum = 0;
     int heightSum = 0;
@@ -309,6 +294,8 @@ runOnceResult runOnce(settings &s)
     {
 
         const string& strTxt = testFiles[x];
+
+
         RunOneFile (strTxt ,false ,s.args ,totalTime ,widthSum ,heightSum ,thereTotal ,therePasses, sumError, os );
         RunOneFile (strTxt ,true ,s.args ,totalTime ,widthSum ,heightSum ,thereTotal ,therePasses, sumError, os );
         os.flush();

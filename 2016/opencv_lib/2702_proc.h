@@ -40,6 +40,18 @@ struct settings{
         }
     }
 
+    void report(std::ostream& os, const char* psz) const
+    {
+        /*
+        os<<psz<<std::endl;
+        for(int x = 0; x < ARG_COUNT; x++)
+        {
+            os<<"args["<<x<<"] = "<<args[x]<<std::endl;
+        }
+        */
+    }
+
+
     int match_method(){return args[0];}
     void set_match_method(int m){args[0] = m;}
     const int edgeDetectParam1(){return args[1];}

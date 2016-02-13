@@ -96,13 +96,13 @@ int main()
               cout<<"Image "<<imgFile<<" was empty"<<endl;
             }
 
-            Mat flipOutput;
+            /*Mat flipOutput;
             flip(img,flipOutput,1);
             ixLastImage = ixCurrentImage;
             img=flipOutput;
             int boxRightOld=boxRight;
             boxRight=160-boxLeft;
-            boxLeft=160-boxRightOld;
+            boxLeft=160-boxRightOld;*/
         }
 
 
