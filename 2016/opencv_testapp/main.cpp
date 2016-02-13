@@ -125,7 +125,7 @@ int main()
         0,
         0,
         0,
-        1 // Green Rejection
+        50 // Green Rejection
     };
     const int UPPER_BOUNDS[] = {
         6,
@@ -142,7 +142,7 @@ int main()
         255,
         255,
         255,
-        255 // Green Rejection
+        400 // Green Rejection
     };
     const bool DIFFERENTIABLE[] = {
         false,

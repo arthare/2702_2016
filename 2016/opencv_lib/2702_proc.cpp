@@ -81,21 +81,21 @@ void dumptuff ()
 
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
-    Mat channels[3];
-    split(normalImage, channels);
-    for(int rows = 0; rows < pixelsWeLikeforResult.rows; rows++)
-    {
-        for(int cols = 0; cols < pixelsWeLikeforResult.cols; cols++)
-        {
-            float& g = channels[1].at<float>(rows + templ.rows/2, cols + templ.cols/2);
-            float& r = channels[0].at<float>(rows + templ.rows/2, cols + templ.cols/2);
-            float& b = channels[2].at<float>(rows + templ.rows/2, cols + templ.cols/2);
-            if(g*greenRejectMultiplyer < b || g*greenRejectMultiplyer < r)
-            {
+    //Mat channels[3];
+    //split(normalImage, channels);
+    //for(int rows = 0; rows < pixelsWeLikeforResult.rows; rows++)
+    //{
+        //for(int cols = 0; cols < pixelsWeLikeforResult.cols; cols++)
+        //{
+            //float& g = channels[1].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            //float& r = channels[0].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            //float& b = channels[2].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            //if(g*greenRejectMultiplyer < b || g*greenRejectMultiplyer < r)
+            //{
                 //pixelsWeLikeforResult.at<uchar>(rows, cols)=0;
-            }
-        }
-    }
+            //}
+        //}
+    //}
 
     //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
     imshow("window2", pixelsWeLikeforResult);
