@@ -119,7 +119,14 @@ int main()
         15, // template pixels per inch
         1, // template line thickness
         150, //brightest pixel we will keep
-        0 // Dimest pixel we will keep
+        0, // Dimest pixel we will keep
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1 // Green Rejection
     };
     const int UPPER_BOUNDS[] = {
         6,
@@ -129,7 +136,14 @@ int main()
         40, //template pixels per inch
         5, //template line thickness
         255, //brightest pixel we will keep
-        50 // dimest pixel we will keep
+        50, // dimest pixel we will keep
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255 // Green Rejection
     };
     const bool DIFFERENTIABLE[] = {
         false,
@@ -139,6 +153,14 @@ int main()
         true,
         true,
         true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
     };
 
     int tries = 0;

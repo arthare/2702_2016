@@ -27,6 +27,7 @@ struct settings{
         , sMax(255)
         , vMin(255)
         , vMax(255)
+        , greenMultiplyer(25500)
     {
     }
 
@@ -45,6 +46,7 @@ struct settings{
         , sMax(args[11])
         , vMin(args[12])
         , vMax(args[13])
+        , greenMultiplyer(args[14]*(2.0f/255.0f))
         {
         }
 
@@ -62,13 +64,14 @@ struct settings{
     const int sMax;
     const int vMin;
     const int vMax;
+    const float greenMultiplyer;
 };
 
 
 pos process(cv::Mat, settings s);
 
-const int ARG_COUNT = 14;
-void getDefaults(int* args);
+const int ARG_COUNT = 15;
+
 
 int getms (void);
 

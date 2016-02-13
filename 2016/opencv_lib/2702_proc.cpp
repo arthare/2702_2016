@@ -60,7 +60,7 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue)
+ pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue, float greenRejectMultiplyer)
  {
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
@@ -70,6 +70,7 @@ void dumptuff ()
 
     result.create(result_rows, result_cols, CV_32FC1 );
     matchTemplate(edgeImage, templ, result, match_method );
+    imshow("window5", edgeImage);
 
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
@@ -80,6 +81,22 @@ void dumptuff ()
 
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
+    Mat channels[3];
+    split(normalImage, channels);
+    for(int rows = 0; rows < pixelsWeLikeforResult.rows; rows++)
+    {
+        for(int cols = 0; cols < pixelsWeLikeforResult.cols; cols++)
+        {
+            float& g = channels[1].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            float& r = channels[0].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            float& b = channels[2].at<float>(rows + templ.rows/2, cols + templ.cols/2);
+            if(g*greenRejectMultiplyer < b || g*greenRejectMultiplyer < r)
+            {
+                //pixelsWeLikeforResult.at<uchar>(rows, cols)=0;
+            }
+        }
+    }
+
     //cout << "templ height : " <<templ.rows << " templ width : " << templ.cols << endl;
     imshow("window2", pixelsWeLikeforResult);
     // cout << "pixels we like height : " << pixelsWeLikeforResult.rows << " pixels we like width : " << pixelsWeLikeforResult.cols << endl;
@@ -221,7 +238,7 @@ pos temple(Mat original, settings& s)
         imshow("window3", edgeDetect);
     }
 
-    pos normal = getMatch(edgeDetect, templ, s.match_method, original, s.tooBrightPixelValues , s.tooDimPixelValue);
+    pos normal = getMatch(edgeDetect, templ, s.match_method, original, s.tooBrightPixelValues, s.tooDimPixelValue, s.greenMultiplyer);
 
     return normal;
 }
