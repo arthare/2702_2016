@@ -94,7 +94,13 @@ int main()
               cout<<"Image "<<imgFile<<" was empty"<<endl;
             }
 
+            Mat flipOutput;
+            flip(img,flipOutput,1);
             ixLastImage = ixCurrentImage;
+            img=flipOutput;
+            int boxRightOld=boxRight;
+            boxRight=160-boxLeft;
+            boxLeft=160-boxRightOld;
         }
 
 
@@ -104,6 +110,13 @@ int main()
             lastProcessResult = process(img, args);
 
             memcpy(lastArgs, args, sizeof(args));
+
+            pos pt = process(img, args);
+            int centerX=(boxLeft+boxRight)/2;
+            int centerY=(boxTop+boxBottom)/2;
+            int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
+            cout << "Error : "<< error << endl;
+
         }
 
         {

@@ -119,7 +119,7 @@ void dumptuff ()
 
 void setupTemplatePNG()
 {
-    templ = imread("../opencv_lib/template.png", CV_LOAD_IMAGE_GRAYSCALE);
+    templ = imread("../opencv_lib/template.png");
     flip(templ, templFlip, 1);
 }
 
@@ -175,12 +175,25 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     }
 }
 
+void newEdgeDetect(InputArray img, OutputArray edges)
+{
+    Mat edgeKernel =Mat::zeros(Size(5,5),CV_32F);
+    for(int i=0; i <5; i++)
+    {
+        edgeKernel.at<float>(i,0)=-1;
+        edgeKernel.at<float>(0,i)=-1;
+        edgeKernel.at<float>(i,4)=-1;
+        edgeKernel.at<float>(4,i)=-1;
+    }
+    edgeKernel.at<float>(2,2)=12;
+    filter2D(img,edges,-1,edgeKernel);
 
+}
 
 pos temple(Mat original, settings& s)
 {
-    setupTemplate(s.templatePixelsPerInch, s.templateLineThickness);
-    //setupTemplatePNG();
+    //setupTemplate(s.templatePixelsPerInch, s.templateLineThickness);
+    setupTemplatePNG();
     /// Do the Matching and Normalize
     if (s.match_method <=  CV_TM_SQDIFF)
     {
@@ -215,11 +228,10 @@ pos temple(Mat original, settings& s)
     }
 
     Mat edgeDetect;
-    Canny(channels[1], edgeDetect, 3*s.edgeDetectParam1, 3*s.edgeDetectParam2, 3);
-    //if(args)
-    {
-        imshow("window3", edgeDetect);
-    }
+    //Canny(channels[1], edgeDetect, 3*s.edgeDetectParam1, 3*s.edgeDetectParam2, 3);
+    newEdgeDetect(original,edgeDetect);
+
+    imshow("window3", edgeDetect);
 
     pos normal = getMatch(edgeDetect, templ, s.match_method, original, s.tooBrightPixelValues , s.tooDimPixelValue);
 
