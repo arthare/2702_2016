@@ -15,21 +15,21 @@ struct settings{
     static const int ARG_COUNT = 15;
     settings()
     {
-        args[0] = 5;
-        args[1] = 163;
-        args[2] = 111;
+        args[0] = 4;
+        args[1] = 64;
+        args[2] = 254;
         args[3] = 35;
-        args[4] = 112;
+        args[4] = 28;
         args[5] = 2;
-        args[6] = 183;
-        args[7] = 0;
-        args[8] = 0;
-        args[9] = 0;
-        args[10] = 0;
-        args[11] = 255;
-        args[12] = 255;
-        args[13] = 255;
-        args[14] = 25500;
+        args[6] = 194;
+        args[7] = 12;
+        args[8] = 120;
+        args[9] = 48;
+        args[10] = 115;
+        args[11] = 198;
+        args[12] = 130;
+        args[13] = 135;
+        args[14] = 195;
     }
 
     settings(int *args)
@@ -42,13 +42,11 @@ struct settings{
 
     void report(std::ostream& os, const char* psz) const
     {
-        /*
         os<<psz<<std::endl;
         for(int x = 0; x < ARG_COUNT; x++)
         {
             os<<"args["<<x<<"] = "<<args[x]<<std::endl;
         }
-        */
     }
 
 

@@ -66,8 +66,6 @@ void dumptuff ()
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
 
-    cout << "result height : " <<result_rows << " result width : " << result_cols << endl;
-
     result.create(result_rows, result_cols, CV_32FC1 );
     matchTemplate(edgeImage, templ, result, match_method );
     imshow("window5", edgeImage);
@@ -266,8 +264,6 @@ pos hsvFilter(Mat& rawImage, settings s)
 
 pos process(Mat img, settings s)
 {
-    s.report(cout, "before process");
-
     pos templResult = temple(img, s);
     return templResult;
 }

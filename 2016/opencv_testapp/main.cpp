@@ -288,7 +288,7 @@ runOnceResult runOnce(settings &s)
     namedWindow("window");
 
     ofstream os;
-    os.open("errors.txt");
+    os.open("/dev/null");
 
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
