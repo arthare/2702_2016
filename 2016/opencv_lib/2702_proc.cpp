@@ -76,7 +76,7 @@ void dumptuff ()
     Mat pixelsWeLike;
     Mat pixelsWeLikeforResult;
 
-    inRange(normalImage, Scalar(tooDimPixelValue,tooDimPixelValue,tooDimPixelValue), Scalar(tooBrightPixelValue,255,tooBrightPixelValue), pixelsWeLike);
+    inRange(normalImage, Scalar(tooDimPixelValue,tooDimPixelValue,tooDimPixelValue), Scalar(tooBrightPixelValue,tooBrightPixelValue,tooBrightPixelValue), pixelsWeLike);
 
 
     pixelsWeLikeforResult = pixelsWeLike(Rect(templ.cols/2, templ.rows/2, result.cols, result.rows));
@@ -175,41 +175,20 @@ void setupTemplate(float templPixelsPerInch, const int lineThickness)
     }
 }
 
-void getDefaults(int* args)
-{
-    args[0] = 5;
-    args[1] = 163;
-    args[2] = 111;
-    args[3] = 35;
-    args[4] = 112;
-    args[5] = 2;
-    args[6] = 183;
-    args[7] = 0;
-}
-pos temple(Mat original, int* args)
-{
-    int defaults[ARG_COUNT];
-    getDefaults(defaults);
 
-    int match_method = args ? args[0] : defaults[0];
-    const int edgeDetectParam1 = args ? args[1] : defaults[1];
-    const int edgeDetectParam2 = args ? args[2] : defaults[2];
-    const float stdDevGoal = args ? args[3] : defaults[3];
-    const float templatePixelsPerInch = (args ? args[4] : defaults[4])/100.0f;
-    const int templateLineThickness = args ? args[5] : defaults[5];
-    const int tooBrightPixelValues = args ? args[6] : defaults[6];
-    const int tooDimPixelValue = args ? args[7] : defaults[7];
 
-    setupTemplate(templatePixelsPerInch, templateLineThickness);
+pos temple(Mat original, settings& s)
+{
+    setupTemplate(s.templatePixelsPerInch, s.templateLineThickness);
     //setupTemplatePNG();
     /// Do the Matching and Normalize
-    if (match_method <=  CV_TM_SQDIFF)
+    if (s.match_method <=  CV_TM_SQDIFF)
     {
-        match_method = CV_TM_SQDIFF;
+        s.match_method = CV_TM_SQDIFF;
     }
-    else if(match_method >= CV_TM_CCOEFF_NORMED)
+    else if(s.match_method >= CV_TM_CCOEFF_NORMED)
     {
-        match_method = CV_TM_CCOEFF_NORMED;
+        s.match_method = CV_TM_CCOEFF_NORMED;
     }
 
     Mat channels[3];
@@ -226,7 +205,7 @@ pos temple(Mat original, int* args)
             {
                 uchar& px = green.at<uchar>(x,y);
                 px = saturate_cast<uchar>(128-mean[0]+px);
-                px = saturate_cast<uchar>((px-128)*(stdDevGoal/stddev[0])+128);
+                px = saturate_cast<uchar>((px-128)*(s.stdDevGoal/stddev[0])+128);
 
 
             }
@@ -236,63 +215,28 @@ pos temple(Mat original, int* args)
     }
 
     Mat edgeDetect;
-    Canny(channels[1], edgeDetect, 3*edgeDetectParam1, 3*edgeDetectParam2, 3);
-    if(args)
+    Canny(channels[1], edgeDetect, 3*s.edgeDetectParam1, 3*s.edgeDetectParam2, 3);
+    //if(args)
     {
         imshow("window3", edgeDetect);
     }
 
-    pos normal = getMatch(edgeDetect, templ, match_method, original, tooBrightPixelValues , tooDimPixelValue);
+    pos normal = getMatch(edgeDetect, templ, s.match_method, original, s.tooBrightPixelValues , s.tooDimPixelValue);
 
     return normal;
 }
 
-pos hsvFilter(Mat& rawImage, pos guessCenter)
+pos hsvFilter(Mat& rawImage, settings s)
 {
-    int boxWidth = 100;
-    int boxHeight = 100;
+    Mat hsvImage;
 
-    int x = guessCenter.x;
-    int y = guessCenter.y;
-
-    Mat hsvBig;
-    Mat hsvSmall;
-
-    cvtColor(rawImage, hsvBig, COLOR_BGR2HSV);
-
-    int cols = hsvBig.cols;
-    int rows = hsvBig.rows;
-
-    int boxx = x-(boxWidth/2);
-    int boxy = y-(boxHeight/2);
-
-    if(boxx + boxWidth > cols)
-    {
-        boxx -= (boxx + boxWidth) - cols;
-    }
-    if(boxy + boxHeight > rows)
-    {
-        boxy -= (boxy + boxHeight) - rows;
-    }
-    if (boxx < 0)
-    {
-        boxx = 0;
-    }
-    if (boxy < 0)
-    {
-        boxy = 0;
-    }
-
-    hsvSmall = hsvBig(Rect(boxx, boxy, boxWidth, boxHeight));
-
-    imshow("window2", hsvSmall);
+    inRange(rawImage, Scalar(s.hMin,s.sMin,s.vMin), Scalar(s.hMax,s.sMax,s.vMax), hsvImage);
 
 }
 
-pos process(Mat img, int* args)
+pos process(Mat img, settings s)
 {
-    pos templResult = temple(img, args);
-    //                              hsvFilter(img, templResult);
+    pos templResult = temple(img, s);
     return templResult;
 }
 

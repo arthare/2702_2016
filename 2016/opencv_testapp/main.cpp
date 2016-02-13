@@ -216,7 +216,9 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, long int
             }
 
             int before = getms();
-            pos pt = process(img, args);
+
+            const settings s = args ? settings(args) : settings();
+            pos pt = process(img, s);
             int after = getms();
             int time = after - before;
             totalTime +=time;
