@@ -24,10 +24,10 @@ struct settings{
 
     settings()
     {
-        args[TEMPLATE_ALGO] = 4;
-        args[STDDEV_STRETCH] = 35;
+        args[TEMPLATE_ALGO] = 5;
+        args[STDDEV_STRETCH] = 27;
         args[TOOBRIGHT] = 194;
-        args[TOODIM] = 12;
+        args[TOODIM] = 16;
     }
 
     settings(int *args)
