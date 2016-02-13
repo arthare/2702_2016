@@ -59,13 +59,11 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Mat& normalImage)
- {
+pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Mat& normalImage)
+{
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
-
-    cout << "result height : " <<result_rows << " result width : " << result_cols << endl;
 
     result.create(result_rows, result_cols, CV_32FC1 );
     matchTemplate(edgeImage, templ, result, s.match_method() );
@@ -205,7 +203,6 @@ void newEdgeDetect(InputArray img, OutputArray edges)
     }
     edgeKernel.at<float>(2,2)=12;
     filter2D(img,edges,-1,edgeKernel);
-
 }
 
 pos temple(Mat original, settings& s)
@@ -256,23 +253,13 @@ pos temple(Mat original, settings& s)
     return normal;
 }
 
-pos hsvFilter(Mat& rawImage, settings s)
-{
-    Mat hsvImage;
-
-    inRange(rawImage, Scalar(s.hMin(),s.sMin(),s.vMin()), Scalar(s.hMax(),s.sMax(),s.vMax()), hsvImage);
-
-}
-
 pos process(Mat img, settings s)
 {
-    s.report(cout, "before process");
-
     pos templResult = temple(img, s);
     return templResult;
 }
 
-int getms (void)
+int getms()
 {
     long            ms; // Milliseconds
     time_t          s;  // Seconds
@@ -285,6 +272,7 @@ int getms (void)
 
     return s * 1000 + ms;
 }
+
 int getdir (string dir, vector<string> &files)
 {
     DIR *dp;
@@ -309,3 +297,4 @@ bool fileExists (const std::string& name)
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
+

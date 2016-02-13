@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Error: 362 With File : ../testdata/images/auto-88.png
 Error: 1 With File : ../testdata/images/auto-88.png
 Error: 5 With File : ../testdata/images/auto-143.png
@@ -57,3 +58,43 @@ Error: 5 With File : ../testdata/images/auto-121.png
 Error: 5 With File : ../testdata/images/auto-153.png
 Error: 5 With File : ../testdata/images/auto-153.png
 Error: 260 With File : ../testdata/images/auto-93.png
+=======
+Error: 8 With File : ../testdata/images/auto-118.png
+Error: 8 With File : ../testdata/images/auto-118.png
+Error: 5 With File : ../testdata/images/auto-107.png
+Error: 8 With File : ../testdata/images/auto-107.png
+Error: 0 With File : ../testdata/images/auto-90.png
+Error: 1 With File : ../testdata/images/auto-90.png
+Error: 8 With File : ../testdata/images/auto-164.png
+Error: 8 With File : ../testdata/images/auto-164.png
+Error: 1 With File : ../testdata/images/auto-79.png
+Error: 2 With File : ../testdata/images/auto-79.png
+Error: 5 With File : ../testdata/images/auto-91.png
+Error: 5 With File : ../testdata/images/auto-91.png
+Error: 8 With File : ../testdata/images/auto-144.png
+Error: 13 With File : ../testdata/images/auto-144.png
+Error: 8 With File : ../testdata/images/auto-137.png
+Error: 13 With File : ../testdata/images/auto-137.png
+Error: 4 With File : ../testdata/images/auto-109.png
+Error: 4 With File : ../testdata/images/auto-109.png
+Error: 17 With File : ../testdata/images/auto-181.png
+Error: 20 With File : ../testdata/images/auto-181.png
+Error: 4 With File : ../testdata/images/auto-76.png
+Error: 1 With File : ../testdata/images/auto-76.png
+Error: 1 With File : ../testdata/images/auto-197.png
+Error: 2 With File : ../testdata/images/auto-197.png
+Error: 2 With File : ../testdata/images/auto-77.png
+Error: 0 With File : ../testdata/images/auto-77.png
+Error: 5 With File : ../testdata/images/auto-108.png
+Error: 4 With File : ../testdata/images/auto-108.png
+Error: 5 With File : ../testdata/images/auto-48.png
+Error: 5 With File : ../testdata/images/auto-48.png
+Error: 4 With File : ../testdata/images/auto-145.png
+Error: 5 With File : ../testdata/images/auto-145.png
+Error: 5 With File : ../testdata/images/auto-189.png
+Error: 5 With File : ../testdata/images/auto-189.png
+Error: 13 With File : ../testdata/images/auto-165.png
+Error: 18 With File : ../testdata/images/auto-165.png
+Error: 13 With File : ../testdata/images/auto-215.png
+Error: 18 With File : ../testdata/images/auto-215.png
+>>>>>>> upstream/master

@@ -114,54 +114,21 @@ int main()
 
     const int LOWER_BOUNDS[] = {
         0,
-        0, // edge1.1
-        0, // edge1.2
-        35, // stddev stretch
-        15, // template pixels per inch
-        1, // template line thickness
+        20, // stddev stretch
         150, //brightest pixel we will keep
         0, // Dimest pixel we will keep
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        50 // Green Rejection
     };
     const int UPPER_BOUNDS[] = {
         6,
-        255, // edge1.1
-        255, // edge1.2
-        36, // stddev stretch
-        40, //template pixels per inch
-        5, //template line thickness
+        45, // stddev stretch
         255, //brightest pixel we will keep
         50, // dimest pixel we will keep
-        255,
-        255,
-        255,
-        255,
-        255,
-        255,
-        400 // Green Rejection
     };
     const bool DIFFERENTIABLE[] = {
-        false,
-        true,
-        true,
-        false,
         true,
         true,
         true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true
+        true,
     };
 
     int tries = 0;
@@ -273,7 +240,7 @@ runOnceResult runOnce(settings &s)
     if (s.showUI) namedWindow("window");
 
     ofstream os;
-    os.open("errors.txt");
+    os.open("/dev/null");
 
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
