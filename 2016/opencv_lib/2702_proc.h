@@ -12,24 +12,22 @@ struct pos {
 };
 
 struct settings{
-    static const int ARG_COUNT = 15;
+    enum ARG_TYPE
+    {
+        TEMPLATE_ALGO,
+        STDDEV_STRETCH,
+        TOOBRIGHT,
+        TOODIM,
+
+        ARG_COUNT,
+    };
+
     settings()
     {
-        args[0] = 5;
-        args[1] = 163;
-        args[2] = 111;
-        args[3] = 35;
-        args[4] = 112;
-        args[5] = 2;
-        args[6] = 183;
-        args[7] = 0;
-        args[8] = 0;
-        args[9] = 0;
-        args[10] = 0;
-        args[11] = 255;
-        args[12] = 255;
-        args[13] = 255;
-        args[14] = 25500;
+        args[TEMPLATE_ALGO] = 4;
+        args[STDDEV_STRETCH] = 35;
+        args[TOOBRIGHT] = 194;
+        args[TOODIM] = 12;
     }
 
     settings(int *args)
@@ -42,32 +40,20 @@ struct settings{
 
     void report(std::ostream& os, const char* psz) const
     {
-        /*
         os<<psz<<std::endl;
         for(int x = 0; x < ARG_COUNT; x++)
         {
             os<<"args["<<x<<"] = "<<args[x]<<std::endl;
         }
-        */
     }
 
 
-    int match_method(){return args[0];}
-    void set_match_method(int m){args[0] = m;}
-    const int edgeDetectParam1(){return args[1];}
-    const int edgeDetectParam2(){return args[2];}
-    const float stdDevGoal(){return args[3];}
-    const float templatePixelsPerInch(){return args[4];}
-    const int templateLineThickness(){return args[5];}
-    const int tooBrightPixelValues(){return args[6];}
-    const int tooDimPixelValue(){return args[7];}
-    const int hMin(){return args[8];}
-    const int hMax(){return args[9];}
-    const int sMin(){return args[10];}
-    const int sMax(){return args[11];}
-    const int vMin(){return args[12];}
-    const int vMax(){return args[13];}
-    const int greenMultiplyer(){return args[14]*(2.0f/255.0f);}
+    int match_method() const { return args[TEMPLATE_ALGO];}
+    void set_match_method(int m) {args[TEMPLATE_ALGO] = m;}
+
+    const float stdDevGoal() const {return args[STDDEV_STRETCH];}
+    const int tooBrightPixelValues() const {return args[TOOBRIGHT];}
+    const int tooDimPixelValue() const {return args[TOODIM];}
 
     int args[ARG_COUNT];
 

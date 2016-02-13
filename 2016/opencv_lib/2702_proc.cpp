@@ -60,13 +60,11 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue, float greenRejectMultiplyer)
+ pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue)
  {
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
     int result_rows = edgeImage.rows - templ.rows + 1;
-
-    cout << "result height : " <<result_rows << " result width : " << result_cols << endl;
 
     result.create(result_rows, result_cols, CV_32FC1 );
     matchTemplate(edgeImage, templ, result, match_method );
@@ -250,24 +248,14 @@ pos temple(Mat original, settings& s)
 
     imshow("window3", edgeDetect);
 
-    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue(), s.greenMultiplyer());
+    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue());
 
 
     return normal;
 }
 
-pos hsvFilter(Mat& rawImage, settings s)
-{
-    Mat hsvImage;
-
-    inRange(rawImage, Scalar(s.hMin(),s.sMin(),s.vMin()), Scalar(s.hMax(),s.sMax(),s.vMax()), hsvImage);
-
-}
-
 pos process(Mat img, settings s)
 {
-    s.report(cout, "before process");
-
     pos templResult = temple(img, s);
     return templResult;
 }
@@ -309,3 +297,4 @@ bool fileExists (const std::string& name)
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
+
