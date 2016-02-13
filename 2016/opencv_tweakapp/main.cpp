@@ -51,22 +51,22 @@ int main()
     namedWindow("window4");
     namedWindow("window5");
 
-    const int ARGS_TO_USE = ARG_COUNT+1;
-    int args[ARGS_TO_USE] = {0};
-    getDefaults(args);
+    settings s;
 
-    for(int x = 0; x < ARGS_TO_USE; x++)
+    for(int x = 0; x < settings::ARG_COUNT; x++)
     {
       char TrackbarName[50];
       sprintf( TrackbarName, "Arg %d", x );
-      createTrackbar( TrackbarName, "window", &args[x], 255 );
+      createTrackbar( TrackbarName, "window", &s.args[x], 255 );
     }
 
+    int ixCurrentImage = 0;
+    createTrackbar( "Image Selection", "window", &ixCurrentImage, 255 );
 
     int ixLastImage = -1;
     Mat img;
     pos lastProcessResult;
-    int lastArgs[ARGS_TO_USE];
+    settings lastArgs;
     int boxTop;
     int boxLeft;
     int boxRight;
@@ -74,9 +74,10 @@ int main()
 
     while(true)
     {
-        int ixCurrentImage = args[ARGS_TO_USE-1];
+
         ixCurrentImage = min((int)ixCurrentImage, (int)testFiles.size());
-        if(ixCurrentImage != ixLastImage)
+        bool imageHasChanged = (ixCurrentImage != ixLastImage);
+        if(imageHasChanged)
         {
             cout<<" they want us to load "<<ixCurrentImage<<", which is "<<testFiles[ixCurrentImage]<<endl;
             string strTxt = testFiles[ixCurrentImage];
@@ -106,13 +107,13 @@ int main()
 
 
         // only reprocess if args have changed
-        if(haveArgsChanged(args, lastArgs, ARGS_TO_USE))
+        if(imageHasChanged || haveArgsChanged(s.args, lastArgs.args, settings::ARG_COUNT))
         {
-            lastProcessResult = process(img, args);
+            lastProcessResult = process(img, s.args);
 
-            memcpy(lastArgs, args, sizeof(args));
+            memcpy(lastArgs.args, s.args, sizeof(s.args));
 
-            pos pt = process(img, args);
+            pos pt = process(img, s.args);
             int centerX=(boxLeft+boxRight)/2;
             int centerY=(boxTop+boxBottom)/2;
             int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
