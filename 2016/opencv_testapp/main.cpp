@@ -16,20 +16,22 @@ struct runOnceResult
     int totalError;
 };
 
-void filterOutCrap(vector<string>& crapFiles)
+vector<string> getListOfTestFiles()
 {
-    for(unsigned int x = 0; x < crapFiles.size(); x++ )
+    vector<string> allFiles;
+    getdir("../testdata/", allFiles);
+
+    vector<string> testFiles;
+    for(size_t i = 0; i < allFiles.size(); ++i )
     {
-        string file = crapFiles[x];
-        if(file.find(".txt") == string::npos)
+        const string& file = allFiles[i];
+        if(file.find(".txt") != string::npos)
         {
-            crapFiles[x] = crapFiles.back();
-            crapFiles.pop_back();
-            x--;
+            testFiles.push_back(file);
         }
     }
+    return testFiles;
 }
-
 
 runOnceResult runOnce(settings& s);
 
@@ -98,18 +100,17 @@ void tuneArgs(settings& s, const bool* DIFFERENTIABLE, const int* LOWER_BOUNDS, 
 
 }
 
-
 int main()
 {
     cout<<"Here's the test with default (on-robot) args"<<endl;
-    settings default_settings;
+    settings default_settings(NO_UI);
     runOnceResult veryFirstTry = runOnce(default_settings);
 
     cout<<"^^^^^^^^^^"<<endl;
     cout<<"Above: the results for on-robot args"<<endl;
 
     int bestScore = veryFirstTry.totalError;
-    int searchRange = 35;
+    //int searchRange = 35;
 
     const int LOWER_BOUNDS[] = {
         0,
@@ -165,13 +166,10 @@ int main()
 
     int tries = 0;
 
-    while(true)
+    for (;;)
     {
-
-        settings s;
-        settings best;
-
-        //int args[settings::ARG_COUNT] = {0};
+        settings s(NO_UI);
+        settings best(NO_UI);
 
         for(int a=0; a < settings::ARG_COUNT; a=a+1)
         {
@@ -185,26 +183,23 @@ int main()
         cout.clear();
 
         tries++;
-        if(tries % 10000 == 0)
+        if (tries % 10000 == 0)
         {
             cout<<"Tries: "<<tries<<endl;
         }
-        if(thisTry.totalError < bestScore)
+
+        if (thisTry.totalError < bestScore)
         {
             tuneArgs(s, DIFFERENTIABLE, LOWER_BOUNDS, UPPER_BOUNDS, thisTry);
             // we got a personal best!
-            for(int a=0; a < settings::ARG_COUNT; a=a+1)
-            {
-                // remember the arguments we used to achieve this
-                best.args[a]=s.args[a];
-            }
+            best.copyArgs(s.args);
             bestScore = thisTry.totalError;
             reportABestTry(thisTry, best, "Random");
         }
     }
 }
 
-void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, int&widthSum, int&heightSum, int&thereTotal, int&therePasses, int&sumError, ostream& os)
+void RunOneFile (string File, bool shouldFlip, settings &s, int &totalTime, int &widthSum, int &heightSum, int &thereTotal, int &therePasses, int &sumError, ostream& os)
 {
     string imgFile;
     ifstream in;
@@ -213,91 +208,79 @@ void RunOneFile (string File,bool shouldFlip, int *args, int&totalTime, int&widt
     in>>imgFile;
 
     Mat img = imread(imgFile.c_str(), CV_LOAD_IMAGE_COLOR);
-    if(img.empty())
+    if (img.empty())
     {
       cout<<"NOT FOUND"<<endl;
+      return;
     }
 
-    else
+    int left;
+    int right;
+    int top;
+    int bottom;
+    in>> left;
+    in>> top;
+    in>> right;
+    in>> bottom;
+
+    if (shouldFlip)
     {
+        int leftTemp = left;
+        Mat dst;
+        flip(img ,dst ,1 );
+        img=dst;
+        left=160-right;
+        right=160-leftTemp;
+    }
 
-        int left;
-        int right;
-        int top;
-        int bottom;
-        in>> left;
-        in>> top;
-        in>> right;
-        in>> bottom;
+    int before = getms();
 
-        if (shouldFlip)
-        {
-            int leftTemp = left;
-            Mat dst;
-            flip(img ,dst ,1 );
-            img=dst;
-            left=160-right;
-            right=160-leftTemp;
-        }
+    pos pt = process(img, s);
+    int after = getms();
+    int time = after - before;
+    totalTime +=time;
 
-        int before = getms();
+    int centerX=(left+right)/2;
+    int centerY=(top+bottom)/2;
+    int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
 
-        const settings s = args ? settings(args) : settings();
-        pos pt = process(img, s);
-        int after = getms();
-        int time = after - before;
-        totalTime +=time;
-
-        {
-            int centerX=(left+right)/2;
-            int centerY=(top+bottom)/2;
-            int error=pow(centerX-pt.x,2) +pow(centerY-pt.y,2);
-
-            sumError=sumError+error;
-            widthSum += right - left;
-            heightSum += bottom - top;
-            os << "Error: " << error << " With File : " << imgFile << endl;
-            // left >= 0, that means the target IS present
-            if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
-            {
-                //cout<<"PASSED"<<endl;
-                therePasses ++;
-
-            }
-
-            thereTotal++;
-        }
+    sumError=sumError+error;
+    widthSum += right - left;
+    heightSum += bottom - top;
+    os << "Error: " << error << " With File : " << imgFile << endl;
+    // left >= 0, that means the target IS present
+    if (pt.x > left && pt.x < right && pt.y > top && pt.y < bottom)
+    {
+        //cout<<"PASSED"<<endl;
+        therePasses ++;
 
     }
+
+    thereTotal++;
 }
+
 runOnceResult runOnce(settings &s)
 {
-    vector<string> testFiles;
-    getdir("../testdata/", testFiles);
-    filterOutCrap(testFiles);
-    int totalTime = 0;
+    vector<string> testFiles = getListOfTestFiles();
 
+    int totalTime = 0;
     int therePasses = 0;
     int thereTotal = 0;
-
     int widthSum = 0;
     int heightSum = 0;
-
     int sumError = 0;
 
-    namedWindow("window");
+    if (s.showUI) namedWindow("window");
 
     ofstream os;
     os.open("errors.txt");
 
     for(unsigned int x=0; x < testFiles.size(); x++)
     {
-
         const string& strTxt = testFiles[x];
 
-
-        RunOneFile (strTxt ,false ,s.args ,totalTime ,widthSum ,heightSum ,thereTotal ,therePasses, sumError, os );
-        RunOneFile (strTxt ,true ,s.args ,totalTime ,widthSum ,heightSum ,thereTotal ,therePasses, sumError, os );
+        RunOneFile (strTxt, false, s, totalTime, widthSum, heightSum, thereTotal, therePasses, sumError, os );
+        RunOneFile (strTxt, true, s, totalTime, widthSum, heightSum, thereTotal, therePasses, sumError, os );
         os.flush();
 
     }
