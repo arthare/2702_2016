@@ -12,24 +12,22 @@ struct pos {
 };
 
 struct settings{
-    static const int ARG_COUNT = 15;
+    enum ARG_TYPE
+    {
+        TEMPLATE_ALGO,
+        STDDEV_STRETCH,
+        TOOBRIGHT,
+        TOODIM,
+
+        ARG_COUNT,
+    };
+
     settings()
     {
-        args[0] = 4;
-        args[1] = 64;
-        args[2] = 254;
-        args[3] = 35;
-        args[4] = 28;
-        args[5] = 2;
-        args[6] = 194;
-        args[7] = 12;
-        args[8] = 120;
-        args[9] = 48;
-        args[10] = 115;
-        args[11] = 198;
-        args[12] = 130;
-        args[13] = 135;
-        args[14] = 195;
+        args[TEMPLATE_ALGO] = 4;
+        args[STDDEV_STRETCH] = 35;
+        args[TOOBRIGHT] = 194;
+        args[TOODIM] = 12;
     }
 
     settings(int *args)
@@ -50,22 +48,12 @@ struct settings{
     }
 
 
-    int match_method(){return args[0];}
-    void set_match_method(int m){args[0] = m;}
-    const int edgeDetectParam1(){return args[1];}
-    const int edgeDetectParam2(){return args[2];}
-    const float stdDevGoal(){return args[3];}
-    const float templatePixelsPerInch(){return args[4];}
-    const int templateLineThickness(){return args[5];}
-    const int tooBrightPixelValues(){return args[6];}
-    const int tooDimPixelValue(){return args[7];}
-    const int hMin(){return args[8];}
-    const int hMax(){return args[9];}
-    const int sMin(){return args[10];}
-    const int sMax(){return args[11];}
-    const int vMin(){return args[12];}
-    const int vMax(){return args[13];}
-    const int greenMultiplyer(){return args[14]*(2.0f/255.0f);}
+    int match_method() const { return args[TEMPLATE_ALGO];}
+    void set_match_method(int m) {args[TEMPLATE_ALGO] = m;}
+
+    const float stdDevGoal() const {return args[STDDEV_STRETCH];}
+    const int tooBrightPixelValues() const {return args[TOOBRIGHT];}
+    const int tooDimPixelValue() const {return args[TOODIM];}
 
     int args[ARG_COUNT];
 

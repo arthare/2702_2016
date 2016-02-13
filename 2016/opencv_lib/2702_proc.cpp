@@ -60,7 +60,7 @@ void dumptuff ()
 }
 
 
- pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue, float greenRejectMultiplyer)
+ pos getMatch(const Mat& edgeImage, const Mat& templ, int match_method, const Mat& normalImage, const int tooBrightPixelValue ,const int tooDimPixelValue)
  {
     Mat result;
     int result_cols =  edgeImage.cols - templ.cols + 1;
@@ -248,18 +248,10 @@ pos temple(Mat original, settings& s)
 
     imshow("window3", edgeDetect);
 
-    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue(), s.greenMultiplyer());
+    pos normal = getMatch(edgeDetect, templ, s.match_method(), original, s.tooBrightPixelValues(), s.tooDimPixelValue());
 
 
     return normal;
-}
-
-pos hsvFilter(Mat& rawImage, settings s)
-{
-    Mat hsvImage;
-
-    inRange(rawImage, Scalar(s.hMin(),s.sMin(),s.vMin()), Scalar(s.hMax(),s.sMax(),s.vMax()), hsvImage);
-
 }
 
 pos process(Mat img, settings s)
@@ -305,3 +297,4 @@ bool fileExists (const std::string& name)
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
+
