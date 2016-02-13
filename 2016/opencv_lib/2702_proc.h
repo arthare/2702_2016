@@ -11,6 +11,9 @@ struct pos {
 };
 pos process(cv::Mat, int* args);
 
+const int ARG_COUNT = 8;
+void getDefaults(int* args);
+
 int getms (void);
 
 int getdir (std::string dir, std::vector<std::string> &files);
