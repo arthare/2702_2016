@@ -69,7 +69,7 @@ pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Ma
     matchTemplate(edgeImage, templ, result, s.match_method() );
     if (s.showUI) imshow("window5", edgeImage);
 
-    s.report(cout, "in getMatch");
+
 
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
@@ -229,13 +229,11 @@ pos temple(Mat original, settings& s)
 
     pos normal = getMatch(edgeDetect, templ, s, original);
 
-    s.report(cout, "in temple");
     return normal;
 }
 
 pos process(Mat img, settings& s)
 {
-    s.report(cout, "in-process");
     pos templResult = temple(img, s);
     return templResult;
 }
