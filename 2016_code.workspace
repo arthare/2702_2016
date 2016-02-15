@@ -15,5 +15,6 @@
 		</Project>
 		<Project filename="2016/opencv_lib/opencv_lib.cbp" />
 		<Project filename="2016/labeler/labeler.cbp" />
+		<Project filename="2016/network_app/network_app.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
