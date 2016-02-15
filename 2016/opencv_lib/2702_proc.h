@@ -4,6 +4,12 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 
+struct networkData
+{
+    int x;
+    int y;
+};
+
 struct pos {
     int x;
     int y;
