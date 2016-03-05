@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <unistd.h>
+#include <fstream>
 
 using namespace cv;
 using namespace std;
@@ -19,6 +20,18 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+
+    string strTargetIp = "10.27.2.21";
+    ifstream in;
+    in.open("ip.txt");
+
+    if(!in.eof() && !in.fail())
+    {
+        in>>strTargetIp;
+        cout<<"ip.txt overrode our target IP to "<<strTargetIp<<endl;
+    }
+    in.close();
+
     VideoCapture cap;
     // open the default camera, use something different from 0 otherwise;
     // Check VideoCapture documentation.
@@ -28,7 +41,6 @@ int main(int argc, char** argv)
     cap.set(CAP_PROP_CONTRAST,-0.75);
     cap.set(CAP_PROP_FRAME_WIDTH,640/SCALE_FACTOR);
     cap.set(CAP_PROP_FRAME_HEIGHT,480/SCALE_FACTOR); // set the scale factor for faster processing
-
 
 
      struct sockaddr_in myaddr;
@@ -53,7 +65,7 @@ int main(int argc, char** argv)
    }
     cout << "bind sucess"<<endl;
 
-   inet_pton(AF_INET,"10.27.2.21",&myaddr.sin_addr.s_addr);
+   inet_pton(AF_INET,strTargetIp.c_str(),&myaddr.sin_addr.s_addr);
 
    myaddr.sin_port=htons(2702);
 
