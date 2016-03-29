@@ -69,6 +69,8 @@ pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Ma
     matchTemplate(edgeImage, templ, result, s.match_method() );
     if (s.showUI) imshow("window5", edgeImage);
 
+
+
     //normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
     Mat pixelsWeLike;
@@ -219,29 +221,6 @@ pos temple(Mat original, settings& s)
         s.set_match_method(CV_TM_CCOEFF_NORMED);
     }
 
-    Mat channels[3];
-    split(original, channels);
-
-    {
-        Mat& green = channels[1];
-        Scalar mean;
-        Scalar stddev;
-        meanStdDev(green, mean, stddev);
-        for(int y=0; y < green.cols; y++)
-        {
-            for(int x=0; x < green.rows; x++)
-            {
-                uchar& px = green.at<uchar>(x,y);
-                px = saturate_cast<uchar>(128-mean[0]+px);
-                px = saturate_cast<uchar>((px-128)*(s.stdDevGoal()/stddev[0])+128);
-
-
-            }
-        }
-
-        //imshow("window2", green);
-    }
-
     Mat edgeDetect;
     //Canny(channels[1], edgeDetect, 3*s.edgeDetectParam1, 3*s.edgeDetectParam2, 3);
     newEdgeDetect(original,edgeDetect);
@@ -253,7 +232,7 @@ pos temple(Mat original, settings& s)
     return normal;
 }
 
-pos process(Mat img, settings s)
+pos process(Mat img, settings& s)
 {
     pos templResult = temple(img, s);
     return templResult;

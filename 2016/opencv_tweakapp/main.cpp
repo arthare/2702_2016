@@ -93,10 +93,10 @@ int main()
             {
               cout<<"Image "<<imgFile<<" was empty"<<endl;
             }
+            ixLastImage = ixCurrentImage;
 
             /*Mat flipOutput;
             flip(img,flipOutput,1);
-            ixLastImage = ixCurrentImage;
             img=flipOutput;
             int boxRightOld=boxRight;
             boxRight=160-boxLeft;
@@ -106,10 +106,8 @@ int main()
         // only reprocess if args have changed
         if (imageHasChanged || haveSettingsChanged(s, lastArgs))
         {
-            lastProcessResult = process(img, s.args);
+            const pos pt = lastProcessResult = process(img, s);
             lastArgs.copyArgs(s.args);
-
-            const pos pt = process(img, s.args);
             const int centerX = (boxLeft+boxRight) / 2;
             const int centerY = (boxTop+boxBottom) / 2;
             const int error = pow(centerX-pt.x, 2) + pow(centerY-pt.y, 2);

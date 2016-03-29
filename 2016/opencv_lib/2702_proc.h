@@ -4,6 +4,12 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 
+struct networkData
+{
+    int x;
+    int y;
+};
+
 struct pos {
     int x;
     int y;
@@ -18,17 +24,25 @@ struct settings{
     enum ARG_TYPE
     {
         TEMPLATE_ALGO,
-        STDDEV_STRETCH,
         TOOBRIGHT,
         TOODIM,
 
         ARG_COUNT,
     };
 
+    settings(const settings& other)
+    {
+        std::cout<<"copy constructor"<<std::endl;
+        this->showUI = other.showUI;
+        for(int x = 0;x < ARG_COUNT; x++)
+        {
+            this->args[x] = other.args[x];
+        }
+    }
+
     settings(bool showUI)
     {
         args[TEMPLATE_ALGO] = 5;
-        args[STDDEV_STRETCH] = 27;
         args[TOOBRIGHT] = 194;
         args[TOODIM] = 16;
         this->showUI = showUI;
@@ -60,7 +74,7 @@ struct settings{
     int match_method() const { return args[TEMPLATE_ALGO];}
     void set_match_method(int m) {args[TEMPLATE_ALGO] = m;}
 
-    const float stdDevGoal() const {return args[STDDEV_STRETCH];}
+
     const int tooBrightPixelValue() const {return args[TOOBRIGHT];}
     const int tooDimPixelValue() const {return args[TOODIM];}
 
@@ -68,7 +82,7 @@ struct settings{
     bool showUI;
 };
 
-pos process(cv::Mat, settings s);
+pos process(cv::Mat, settings& s);
 int getms();
 int getdir (std::string dir, std::vector<std::string> &files);
 bool fileExists(const std::string& name);
