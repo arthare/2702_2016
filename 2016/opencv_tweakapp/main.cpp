@@ -118,7 +118,10 @@ int main()
         {
             // now that we've processed, draw a circle on it
             Mat whereAt = img.clone();
-            circle(whereAt, Point(lastProcessResult.x, lastProcessResult.y), 5, Scalar(255,255,255), 3);
+            circle(whereAt, Point(lastProcessResult.x, lastProcessResult.y), 10, Scalar(255,255,255), 2);
+            float qFraction = (255*lastProcessResult.quality2) / lastProcessResult.quality;
+            circle(whereAt, Point(lastProcessResult.x2, lastProcessResult.y2), 10, Scalar(qFraction,qFraction,qFraction), 2);
+            cout << "qFraction =" << qFraction << endl;
             rectangle(whereAt, Point(boxLeft,boxTop), Point(boxRight,boxBottom),Scalar(255,255,255), 1);
             imshow("window", whereAt);
         }

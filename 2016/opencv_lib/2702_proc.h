@@ -13,8 +13,11 @@ struct networkData
 struct pos {
     int x;
     int y;
-    long minVal;
-    long maxVal;
+    int quality;
+    int x2;
+    int y2;
+    int quality2;
+
 };
 
 static const bool NO_UI = false;

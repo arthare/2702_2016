@@ -110,28 +110,46 @@ pos getMatch(const Mat& edgeImage, const Mat& templ, const settings &s, const Ma
     double minVal; double maxVal; Point minLoc; Point maxLoc;
     Point matchLoc;
 
-
     minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
+    double originalRange = maxVal-minVal;
+    pos temp;
 
     /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
     if (s.match_method() == CV_TM_SQDIFF || s.match_method() == CV_TM_SQDIFF_NORMED )
     {
         matchLoc = minLoc;
+        temp.quality = minVal;
     }
     else
     {
         matchLoc = maxLoc;
+        temp.quality = 1000;
     }
-
-    pos temp;
-
 
     temp.x = matchLoc.x + templ.cols /2;
     temp.y = matchLoc.y + templ.rows /2;
+    circle(result, Point(matchLoc.x, matchLoc.y),5 , Scalar(0,0,0),-1 );
 
-    temp.minVal = minVal;
-    temp.maxVal = maxVal;
+    if (s.showUI)
+    {
+        imshow("window3",result);
+    }
+      minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 
+    /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
+    if (s.match_method() == CV_TM_SQDIFF || s.match_method() == CV_TM_SQDIFF_NORMED )
+    {
+        matchLoc = minLoc;
+        temp.quality2 = minVal;
+    }
+    else
+    {
+        matchLoc = maxLoc;
+        int offset=maxVal-minVal;
+        temp.quality2 = (1000*offset)/originalRange;
+    }
+    temp.x2 = matchLoc.x + templ.cols /2;
+    temp.y2 = matchLoc.y + templ.rows /2;
     return temp;
  }
 
