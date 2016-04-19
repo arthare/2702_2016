@@ -18,10 +18,18 @@ using namespace cv;
 using namespace std;
 #define SCALE_FACTOR 4
 
+string makeFileName(int img, pos pt)
+{
+    stringstream ssSave;
+    ssSave<<"pi-img-"<<img<< "_"<<pt.x<<","<< pt.y <<".png";
+    return ssSave.str();
+}
+
 int main(int argc, char** argv)
 {
 
     string strTargetIp = "10.27.2.21";
+    int imgDelay = 5000;
     ifstream in;
     in.open("ip.txt");
 
@@ -29,6 +37,10 @@ int main(int argc, char** argv)
     {
         in>>strTargetIp;
         cout<<"ip.txt overrode our target IP to "<<strTargetIp<<endl;
+        if(!in.eof() && !in.fail())
+        {
+            in>>imgDelay;
+        }
     }
     in.close();
 
@@ -70,8 +82,9 @@ int main(int argc, char** argv)
    myaddr.sin_port=htons(2702);
 
 
-
-    int lastMs = getms();
+    int startMs = getms();
+    int lastMs = startMs;
+    int lastSave = startMs;
     for(;;)
     {
         Mat frame;
@@ -81,10 +94,19 @@ int main(int argc, char** argv)
 
         int start = getms();
 
+
         settings s(NO_UI);
         pos pt = process (frame, s);
 
+        const int msSinceSave=getms()-lastSave;
+        if(msSinceSave > imgDelay)
+        {
+                string fileName = makeFileName(getms(), pt);
+                cout<<"trying to save to "<<fileName<<endl;
 
+                imwrite( fileName.c_str(), frame );
+                lastSave = getms();
+        }
 
 
         int now = getms();
