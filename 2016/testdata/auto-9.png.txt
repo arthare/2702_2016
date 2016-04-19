@@ -1,0 +1,5 @@
+../testdata/images/auto-9.png
+103
+15
+120
+30
