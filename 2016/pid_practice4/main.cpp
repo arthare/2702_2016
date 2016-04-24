@@ -266,8 +266,8 @@ public:
     {
         switch(index)
         {
-            case PID_P: return 0;
-            case PID_I: return 0;
+            case PID_P: return -100;
+            case PID_I: return -100;
             case PID_D: return -100;
         }
     }
@@ -277,9 +277,11 @@ public:
     {
         switch(index)
         {
-            case PID_P: return 62.7019;
-            case PID_I: return -0.045136;
-            case PID_D: return 17.8377;
+            // note: benjamin's initial values were 20, 0, 1.25 -> 50.719s
+            // the hillclimber eventually found 62.7019, -0.045136, 17.8377 as a big improvement to 12.622s
+            case PID_P: return 20;
+            case PID_I: return 0;
+            case PID_D: return 1.25;
         }
     }
 

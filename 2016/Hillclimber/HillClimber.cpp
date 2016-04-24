@@ -119,7 +119,11 @@ void DoHillClimb(Climbable* pTarget)
             // pick a random value centered around
             const float randomSpan = paramSpan * tightness;
 
-            params.push_back(randomNumber(bestParams[a] - randomSpan/2,bestParams[a] + randomSpan/2));
+            float valueToUse = randomNumber(bestParams[a] - randomSpan/2,bestParams[a] + randomSpan/2);
+            valueToUse = max(paramMin, valueToUse);
+            valueToUse = min(paramMax, valueToUse);
+
+            params.push_back(valueToUse);
         }
 
         cout.setstate(std::ios_base::badbit);
