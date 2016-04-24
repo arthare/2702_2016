@@ -1,7 +1,8 @@
 #include <iostream>
 #include <math.h>
-
-const double globalSetPoint = 2;
+#include <vector>
+#include "../Hillclimber/HillClimber.h"
+using namespace std;
 
 double abs(double i)
 {
@@ -161,13 +162,13 @@ private:
 class Robot : public PhysicsEntity
 {
 public:
-    Robot() : PhysicsEntity(54), pid(20,0,1.25) {}
+    Robot(float p, float i, float d, float setpoint) : PhysicsEntity(54), pid(p,i,d), m_pidSetpoint(setpoint) {}
     void Tick(double dt)
     {
 
         double motorPower = 0;
         const double inputSensor = GetX();
-        pid.Tick(inputSensor, &motorPower, globalSetPoint, dt);
+        pid.Tick(inputSensor, &motorPower, m_pidSetpoint, dt);
 
         SetMotorPower(motorPower);
 
@@ -197,11 +198,26 @@ private:
 
 private:
     PIDLoop pid;
+    const float m_pidSetpoint;
 };
 
-int main()
+
+
+
+////////////////////////////////////////////////////////////
+// hillclimbing section
+////////////////////////////////////////////////////////////
+enum vars
 {
-    Robot r;
+    PID_P,
+    PID_I,
+    PID_D,
+
+    PID_COUNT,
+};
+float GetTimeUntilSettled(const vector<float>& params, float distance)
+{
+    Robot r(params[PID_P], params[PID_I], params[PID_D], distance);
     double totalTime = 0;
     int lastReportedSecond = 0;
     while(true)
@@ -209,10 +225,10 @@ int main()
         const double dt = 0.001;
         totalTime += dt;
         r.Tick(dt);
-        if (r.IsDone())
+        if (r.IsDone() || totalTime > 100)
         {
             cout<<totalTime<<" Robot position: "<<r.GetX()<<endl;
-            return 0;
+            return totalTime;
         }
 
         const int thisSecond = (totalTime * 10);
@@ -222,5 +238,64 @@ int main()
             lastReportedSecond = thisSecond;
         }
     }
-    return 0;
+    return totalTime;
+
+}
+
+class PIDClimbable : public Climbable
+{
+public:
+    virtual float Evaluate(std::vector<float> params)
+    {
+        return GetTimeUntilSettled(params, 2) + GetTimeUntilSettled(params, 10) + GetTimeUntilSettled(params, 0.2);
+    }
+
+    // for parameter "index", how high can it be?
+    virtual float GetVarMax(int index) const
+    {
+        switch(index)
+        {
+            case PID_P: return 100;
+            case PID_I: return 100;
+            case PID_D: return 100;
+        }
+    }
+
+    // for parameter "index", how low can it be?
+    virtual float GetVarMin(int index) const
+    {
+        switch(index)
+        {
+            case PID_P: return 0;
+            case PID_I: return 0;
+            case PID_D: return -100;
+        }
+    }
+
+    // for parameter "index", what value should it start at?
+    virtual float GetVarInitial(int index) const
+    {
+        switch(index)
+        {
+            case PID_P: return 62.7019;
+            case PID_I: return -0.045136;
+            case PID_D: return 17.8377;
+        }
+    }
+
+    virtual int GetParamCount() const
+    {
+        return PID_COUNT;
+    }
+
+    virtual void ReportProgress(const std::vector<float>& params, float errorAchieved, const char* preamble) const
+    {
+        cout<<preamble<<": PID tune time "<<errorAchieved<<"s.  Params: "<<params[0]<<", "<<params[1]<<", "<<params[2]<<endl;
+    };
+};
+
+int main()
+{
+    PIDClimbable climb;
+    DoHillClimb(&climb);
 }

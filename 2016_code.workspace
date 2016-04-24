@@ -16,5 +16,7 @@
 		<Project filename="2016/opencv_lib/opencv_lib.cbp" />
 		<Project filename="2016/labeler/labeler.cbp" />
 		<Project filename="2016/network_app/network_app.cbp" />
+		<Project filename="2016/pid_practice4/pid_practice4.cbp" />
+		<Project filename="2016/Hillclimber/Hillclimber.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
